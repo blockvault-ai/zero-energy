@@ -56,7 +56,7 @@ Consequences that must be respected in all protocol communications:
 
 This table expresses **maximum limits**, not fixed amounts to be minted. Actual issuance derives from real activity:
 
-* **Presale and Merits** are linked to what is actually raised and claimed, and may be resolved, at the participant's choice, into ZREC instead of ZDAO (Sections 5.4 and 5.5). The corresponding ZDAO are never minted.
+* **Presale and Merits** are linked to what is actually raised and claimed. Presale allocations may be resolved, at the participant's choice, into ZREC instead of ZDAO (Section 5.4); Merits allocations convert directly into ZREC (Section 5.5). The corresponding ZDAO are never minted.
 * **Staking Rewards** have no fixed reserve: ZDAO is minted on demand, only against legitimate accrual (Section 6.2), bounded by `MAX_SUPPLY`.
 * **Strategic Issuances** are an upper bound requiring express DAO approval.
 
@@ -70,7 +70,7 @@ No fixed reserve of ZDAO is pre-allocated to staking. The `MAX_SUPPLY` ceiling i
 
 All issued ZDAO are fully fungible. The origin of their issuance does not alter the nature of the asset nor the rights it confers.
 
-A technical consequence derives from this, which the protocol respects in its design: **an ERC-20 cannot distinguish the provenance of the tokens that make up a balance.** Therefore no protocol rule depends on the origin of a specific ZDAO. The Presale and Merits choices between ZDAO and ZREC (Sections 5.4 and 5.5), which do depend on the allocation, are resolved outside the token.
+A technical consequence derives from this, which the protocol respects in its design: **an ERC-20 cannot distinguish the provenance of the tokens that make up a balance.** Therefore no protocol rule depends on the origin of a specific ZDAO. The Presale choice between ZDAO and ZREC (Section 5.4), which does depend on the allocation, is resolved outside the token.
 
 ## 2.5 Functions
 

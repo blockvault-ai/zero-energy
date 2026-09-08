@@ -68,15 +68,14 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PRESALE / MERITS<br/>(off-chain)"]
-    B["TGE + CLAIM<br/>(single 6-month window)"]
-    P["PRESALE BRANCH<br/>choice at claim"]
+    B["CLAIM<br/>(single 6-month window)"]
+    P["PRESALE BRANCH<br/>(ZDAO allocation)"]
     P1["free ZDAO"]
     P2["free ZREC<br/>(no vesting)"]
-    M["MERITS BRANCH<br/>choice at claim"]
-    M1["ZDAO (free)"]
-    M2["ZREC (vesting)<br/>automatic staking"]
-    M3[6 months lock]
-    M4[2% monthly x 50 months]
+    M["MERITS BRANCH<br/>(ZREC conversion)"]
+    M1["ZREC with vesting<br/>6-month cliff + 2% monthly"]
+    M2["vested ZREC stays in staking"]
+    M3["generates free ZDAO"]
     D["ZERO DEX (Dashboard)<br/>staking · market · liquidity · governance"]
     R[REAL ENERGY PRODUCTION]
     V["Proof of Energy → Energy Oracles → batch → validation"]
@@ -88,14 +87,11 @@ flowchart TD
     P --> P1
     P --> P2
     M --> M1
-    M --> M2
+    M1 --> M2
     M2 --> M3
-    M2 --> M4
     P1 --> D
     P2 --> D
-    M1 --> D
     M3 --> D
-    M4 --> D
     D --> R --> V --> O
 ```
 

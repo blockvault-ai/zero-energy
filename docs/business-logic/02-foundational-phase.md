@@ -33,7 +33,7 @@ The resources obtained are allocated to the development of the blockchain and en
 * The TGE fixes the reference date (`t0`) from which the Claim window and the Merits schedules are computed.
 * The Claim window lasts **six (6) months** from the TGE.
 * Presale participants choose, at claim time, between ZDAO or ZREC (both free of Vesting).
-* Merits participants choose, at claim time, between ZDAO or ZREC.
+* Merits participants convert their allocations into ZREC with a vesting schedule (Section 5.5).
 * The staking positions corresponding to Merits ZREC are created automatically.
 
 Once the window closes, the possibility of claiming a foundational allocation closes as well, and unclaimed allocations are treated according to the pending decision below.
@@ -42,12 +42,13 @@ Once the window closes, the possibility of claiming a foundational allocation cl
 
 ## 5.3 Claim choices
 
-**There is no special "right" attached to a foundational allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption:
+**There is no special "right" attached to a foundational allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption. Only Presale allocations involve a choice; Merits allocations resolve directly into ZREC (Section 5.5).
 
 ```mermaid
 flowchart TD
-    A[PENDING] --> B["CLAIM ZDAO"]
+    A[PRESALE PENDING] --> B["CLAIM ZDAO"]
     A --> C["CLAIM ZREC"]
+    M[MERITS PENDING] --> Z["CLAIM ZREC<br/>(vesting)"]
 ```
 
 Once an option is executed, the allocation is definitively consumed. Consequently:
@@ -76,25 +77,21 @@ Ratio: **1 Presale allocation = 1 ZDAO or 1 ZREC**. There is no burn: the ZDAO o
 
 This route gives Presale participants a direct entry into the protocol's energy economy and into ZREC staking.
 
-## 5.5 Merits branch: ZDAO or ZREC
+## 5.5 Merits branch: ZREC with vesting
 
-Merits allocations are recorded off-chain denominated in ZDAO. At claim time, the participant **chooses between two options**:
-
-* **ZDAO** — the ZDAO are minted on-chain, free and transferable, with no Vesting.
-* **ZREC** — the participant does not receive ZDAO; instead an equivalent amount of ZREC is minted and **automatically deposited in staking**, where it remains producing ZDAO under a special withdrawal schedule.
+Merits allocations are recorded off-chain denominated in ZDAO. At claim time, the participant **converts the allocation into ZREC** (there is no ZDAO option). The ZREC is minted and **automatically deposited in staking**, where it remains producing ZDAO under a special withdrawal schedule.
 
 ```mermaid
 flowchart LR
     A["Merits allocation<br/>(off-chain, in ZDAO)"] --> B[Claim]
-    B --> C["choose ZDAO<br/>(free)"]
-    B --> D["choose ZREC<br/>(vesting + staking)"]
+    B --> C["convert to ZREC<br/>(vesting + staking)"]
 ```
 
-Ratio: **1 ZDAO allocated through Merits = 1 ZREC** (or 1 ZDAO, if the ZDAO option is chosen). There is no burn: the ZDAO of a ZREC choice are never minted.
+Ratio: **1 ZDAO allocated through Merits = 1 ZREC**. There is no burn: the ZDAO are never minted.
 
 **There is no Vesting contract.** The time restrictions are implemented **directly through the withdrawal rules of the position within the Official Staking System**. The correct formulation is **"Merits ZREC → Staking with a special withdrawal schedule"**.
 
-The ZREC chosen remain **in staking for the whole schedule**, producing ZDAO from day one. The ZDAO generated as rewards are **free and transferable immediately** (Section 6.5): the lock applies only to the deposited ZREC principal.
+The ZREC remain **in staking for the whole schedule**, producing ZDAO from day one. The ZDAO generated as rewards are **free and transferable immediately** (Section 6.5): the lock applies only to the deposited ZREC principal.
 
 **Availability schedule**
 

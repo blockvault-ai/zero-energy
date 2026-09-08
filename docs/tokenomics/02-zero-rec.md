@@ -44,13 +44,13 @@ Resolved **during the Claim**, according to Section 5.4. Presale ZREC are **free
 
 Allows the energy economy and staking to start before sufficient certified production exists. It is resolved **during the Claim**, according to Section 5.5.
 
-**There is no mint-and-burn operation.** When a Merits participant chooses ZREC, the corresponding ZDAO **never get minted on-chain**. The correct formulation is:
+**There is no mint-and-burn operation.** When a Merits allocation converts to ZREC, the corresponding ZDAO **never get minted on-chain**. The correct formulation is:
 
-> The choice of ZREC extinguishes the claim over the corresponding amount of ZDAO and enables the equivalent minting of ZREC, which is automatically deposited in staking with a special withdrawal schedule.
+> The conversion to ZREC extinguishes the claim over the corresponding amount of ZDAO and enables the equivalent minting of ZREC, which is automatically deposited in staking with a special withdrawal schedule.
 
 ```mermaid
 flowchart LR
-    A["1 Merits allocation<br/>(1 ZDAO, off-chain)"] --> B["choose ZREC"]
+    A["1 Merits allocation<br/>(1 ZDAO, off-chain)"] --> B["convert to ZREC"]
     B --> C[extinction of the claim over ZDAO]
     C --> D["minting of 1 ZREC<br/>+ automatic staking"]
 ```
