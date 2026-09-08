@@ -2,6 +2,23 @@
 
 # ANNEX B — CHANGE LOG
 
+## Changes in version 3.3 (relative to 3.2)
+
+**Consistency and corrections**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | Burn mechanism corrected: ZDAO burned **restores minting capacity** (aligned with Section 2.2) | 2.6 |
+| 2 | Reward sigmoid fixed with `b = 0`; the accrual antiderivative is corrected to `a·(√(T²+c) − √c)` | 6.2 and Annex A.2 |
+| 3 | Concrete sigmoid parameters published: `a = 5%`, `b = 0`, `c = 1,323 days²`; reference table updated to exact values | 6.2 and 11.2 |
+| 4 | ZREC minting origins clarified: Presale ZREC is minted via Claim alongside Merits ZREC | 8.2 and 9 |
+| 5 | ZDAO "circulating supply" clarified: no locked ZDAO positions, so `totalSupply` equals circulating supply | 2.1 |
+| 6 | The 50% MAX_SUPPLY headroom (formerly the 500M reserve) is documented as a dynamic buffer | 2.3 |
+| 7 | Security vector renamed: "Accelerated depletion of the staking reserve" → "Accelerated emission / supply dilution" | 10.2 |
+
+---
+
 ## Changes in version 3.2 (relative to 3.1)
 
 **Economic changes — dynamic mintable/burnable emission**

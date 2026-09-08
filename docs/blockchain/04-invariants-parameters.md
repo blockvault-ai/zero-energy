@@ -38,8 +38,10 @@ Modifiable by governance within the indicated ranges and subject to the timelock
 | Committee mandate | 24 months | renewable | 8.1 |
 | MAX_EMISSION_RATE (staking) | 10 % APR | 0% – 15% | 6.2 |
 | Usage component ceiling | 5 % APR | 0% – 7.5% | 6.2 |
+| Personal component ceiling (a) | 5 % APR | 0% – 7.5% | 6.2 |
+| Reward sigmoid offset (b) | 0 | fixed | 6.2 |
+| Reward sigmoid slope (c) | 1,323 days² | with safety limits | 6.2 |
 | totalSupplyFactor | 50 % | 10% – 100% | 6.2 |
-| Reward sigmoid (a, b, c) | see Section 6.2 | with safety limits | 6.2 |
 | Staking withdrawal periods and fee | pending implementation | with safety limits | 6.6 |
 
 ## 11.3 Pending decisions

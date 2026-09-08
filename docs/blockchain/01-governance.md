@@ -21,7 +21,7 @@ The protocol recognizes exclusively the following permissions. No other permissi
 | **Permission** | **Holder** | **Scope** | **Destination** |
 | Reward minting | Staking contract | On-demand, bounded by MAX_SUPPLY | Permanent |
 | Minting via Claim | Claim contract | Allocations from the published root | Extinguishes when the window closes |
-| Foundational ZREC minting | Claim contract | Merits choices resolved to ZREC | Extinguishes when the window closes |
+| Foundational ZREC minting | Claim contract | Presale and Merits allocations resolved to ZREC | Extinguishes when the window closes |
 | Energy minting of ZREC | Energy Issuance contract | Finalized batches | Permanent |
 | Oracle operation | ZERO Energy | Signature of validations | Opens to third parties (Milestone 3) |
 | Strategic minting | Governance | Strategic Issuances | Subject to the supply invariant |
@@ -80,6 +80,6 @@ Each milestone entails an **irreversible renunciation** of a control capability:
 
 ## 8.7 State publication
 
-The protocol publishes permanently and queryably: the milestone reached and the transaction of each renunciation executed; the list of addresses with active minting permission; the pending transactions in the timelock; the composition of the Committee and of the oracle set, with indication of their operator; `totalSupply`, and remaining issuance capacity; the state of staking; the number of registered installations and the accumulated certified energy; and the percentage of Foundational Issuance compensated.
+The protocol publishes permanently and queryably: the milestone reached and the transaction of each renunciation executed; the list of addresses with active minting permission; the pending transactions in the timelock; the composition of the Committee and of the oracle set, with indication of their operator; `totalSupply`, and remaining issuance capacity; the state of staking; the number of registered installations and the accumulated certified energy; and the percentage of Foundational Issuance offset.
 
 > The degree of decentralization of a protocol is not declared: it is demonstrated through the list of capabilities that have been renounced in a verifiable manner.

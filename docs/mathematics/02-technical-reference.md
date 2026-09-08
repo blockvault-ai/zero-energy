@@ -48,9 +48,7 @@ struct Position {
 /// @notice Sigmoid curve of the temporal component.
 /// y = a·(t-b) / sqrt((t-b)^2 + c)
 function personalRate(uint256 elapsed) public view returns (uint256) {
-    int256 k = int256(elapsed) - sigmoidB;
-    if (k < 0) return 0;
-    uint256 uk = uint256(k);
+    uint256 uk = uint256(elapsed); // sigmoidB = 0 (offset removed)
     return sigmoidA * uk / sqrt(uk * uk + sigmoidC);
 }
 
@@ -64,8 +62,8 @@ function usageRate() public view returns (uint256) {
 }
 
 /// @notice Accrual. Exact integral of the instantaneous rate over the period.
-/// The personal sigmoid has a closed-form antiderivative:
-///   ∫ a·(t-b)/sqrt((t-b)^2+c) dt = a·sqrt((t-b)^2+c)
+/// The personal sigmoid (b = 0) has a closed-form antiderivative:
+///   ∫ a·t/sqrt(t²+c) dt = a·sqrt(t²+c)
 /// so the accrued reward is computed exactly without numerical integration.
 function accrued(Position storage p) internal view returns (uint256) {
     uint256 elapsed = block.timestamp - p.startDate;
@@ -76,14 +74,11 @@ function accrued(Position storage p) internal view returns (uint256) {
 }
 
 /// @notice Exact integral of the personal sigmoid from 0 to elapsed.
-///   a·( sqrt((T-b)^2+c) − sqrt((0−b)^2+c) ), with rate = 0 where t < b.
+///   a·( sqrt(T²+c) − sqrt(c) ), with b = 0.
 function _personalIntegral(uint256 elapsed) internal view returns (uint256) {
-    int256 Tb = int256(elapsed) - sigmoidB;
-    if (Tb <= 0) return 0; // rate is 0 for all t <= b
-    int256 c0 = sqrt(sigmoidB * sigmoidB + sigmoidC); // sqrt((0-b)^2+c)
-    uint256 sT = sqrt(uint256(Tb) * uint256(Tb) + sigmoidC);
-    uint256 s0 = uint256(c0);
-    if (sT < s0) return 0;
+    uint256 sT = sqrt(elapsed * elapsed + sigmoidC);
+    uint256 s0 = sqrt(sigmoidC); // sqrt(c): base of the antiderivative at t=0
+    if (sT <= s0) return 0;
     return sigmoidA * (sT - s0);
 }
 ```

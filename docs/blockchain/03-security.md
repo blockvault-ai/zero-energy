@@ -23,7 +23,7 @@ All contracts must undergo independent audit before production, expressly verify
 | Nonexistent or oversized installation | Triple verification of nominal power | 4.5 |
 | Discretionary authorization of minting | Merkle tree published before the Claim | 5.6 |
 | Cumulative deviation from rounding | Mandatory carryover of residues | 4.6 |
-| Accelerated depletion of the staking reserve | MAX_EMISSION_RATE and anti-dilutive usage component as ceiling | 6.2 and 6.3 |
+| Accelerated emission / supply dilution | MAX_EMISSION_RATE and anti-dilutive usage component as ceiling | 6.2 and 6.3 |
 
 ## 10.3 Treasury and operational security
 

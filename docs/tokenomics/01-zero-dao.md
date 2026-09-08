@@ -6,19 +6,20 @@ ERC-20 governance and incentive token of the protocol, deployed on Base. **8 dec
 
 ## 2.1 Supply magnitudes
 
-The document distinguishes six magnitudes that must not be confused:
+The document distinguishes these magnitudes that must not be confused:
 
 |  |  |
 | --- | --- |
 | **Magnitude** | **Definition** |
 | MAX_SUPPLY | 1,000,000,000 ZDAO. Absolute ceiling, never exceedable |
 | totalSupply | ZDAO currently in existence (minted minus burned). This is the **circulating metric** against which minting capacity is measured |
-| Circulating supply | totalSupply minus locked positions |
 | Minting capacity | `MAX_SUPPLY - totalSupply`. Recovered when ZDAO is burned |
 | Off-chain allocations | Rights registered in Presale and Merits, not yet minted |
 | Burned ZDAO | Permanently destroyed; reduces `totalSupply` |
 
 **Invariant:** `totalSupply <= MAX_SUPPLY`, verified on every mint.
+
+> **Note on terminology.** ZDAO has **no locked positions**: staking rewards are free and transferable immediately (Section 6.5), and the Merits lock applies to the deposited ZREC principal, never to ZDAO. Therefore `totalSupply` **is** the circulating supply — there is no separate "circulating" magnitude to subtract locked ZDAO from.
 
 ZDAO is **mintable and burnable**: it is minted against legitimate accrual (staking) and governed issuances, and burned through the mechanisms of Sections 2.6 and 3.6. The only fixed figure in the entire supply is the `MAX_SUPPLY` ceiling; all other magnitudes are dynamic and derive from actual usage.
 
@@ -62,7 +63,9 @@ This table expresses **maximum limits**, not fixed amounts to be minted. Actual 
 
 No fixed reserve of ZDAO is pre-allocated to staking. The `MAX_SUPPLY` ceiling is the single hard limit; everything else is dynamic.
 
-**Merits and Ecosystem is a single bucket.** It comprises the founding team, contributors, ambassadors, and user onboarding campaigns. **There are no separate quotas by category.**
+**Headroom.** The explicit limits (Presale 200M + Merits/Ecosystem 100M + Strategic 200M = 500M) account for at most 50% of `MAX_SUPPLY`. The remaining headroom is not assigned to any predefined program: it is only consumable by staking accrual (on demand, Section 6.2) and future governance-approved issuances. It is a dynamic buffer, not a fixed allocation.
+
+**Merits and Ecosystem is a single bucket** (abbreviated "Merits" throughout the document). It comprises the founding team, contributors, ambassadors, and user onboarding campaigns. **There are no separate quotas by category.**
 
 **Strategic Issuances.** Intended destinations, of an **indicative and non-binding** nature: market liquidity (150,000,000) and contingencies (50,000,000). Any issuance against this program requires a proposal approved by the DAO and the Section 8 timelock. There is no automatic minting mechanism against this line item.
 
@@ -97,4 +100,4 @@ flowchart LR
 
 The mechanism avoids hundreds of small-value burn operations, reduces operational cost, and maintains on-chain traceability. Neither the DAO nor the Committee intervenes at execution time: **the burn is triggered automatically by the fee-consolidation routine (a keeper or any user's transaction) once the segregated accumulation reaches the threshold**, and it emits a verifiable on-chain event. The segregated accumulation is held in a dedicated contract balance separate from the circulating supply until execution.
 
-In accordance with Section 2.2, ZDAO burned by this mechanism do not regenerate issuance capacity.
+In accordance with Section 2.2, ZDAO burned by this mechanism **reduces `totalSupply` and restores minting capacity**.

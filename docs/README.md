@@ -1,6 +1,6 @@
-# ZERO Energy — Technical Specification v2.0
+# ZERO Energy — Technical Specification v3.3
 
-Documentation modularized by domain. Original source: `ZERO-ENERGY-Especificacion-Tecnica-v2.0.md`.
+Documentation modularized by domain. Original source: `ZERO-ENERGY-Especificacion-Tecnica-v2.0.md`. This `docs/` tree is the authoritative, up-to-date version (v3.3); the root source file remains historical.
 
 ## Domains
 

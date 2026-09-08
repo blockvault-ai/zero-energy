@@ -11,28 +11,28 @@ The system **abandons any interpretation of a guaranteed fixed ROI**. The reward
 
 Sigmoid curve over the time the position has been deposited:
 
-$$ r_{personal} = \frac{a \cdot (t - b)}{\sqrt{(t - b)^2 + c}} $$
+$$ r_{personal} = \frac{a \cdot t}{\sqrt{t^2 + c}} $$
 
-| Variable | Definition |
-| --- | --- |
-| $t$ | time in staking |
-| $a$ | component ceiling |
-| $b$ | offset |
-| $c$ | slope parameter |
+| Variable | Definition | Reference value |
+| --- | --- | --- |
+| $t$ | time in staking | — |
+| $a$ | component ceiling (personal APR cap) | **5 %** |
+| $b$ | offset | **0** (removed) |
+| $c$ | slope parameter | **1,323 days²** |
 
-$$ r_{personal} = 0 \quad \text{if} \quad (t - b) < 0 $$
-
-The curve grows quickly at first and then flattens: it rewards permanence without locking anyone in. With reference parameters, the behavior is:
+With $b = 0$, the curve starts at $t=0$ and grows monotonically toward $a$, rewarding permanence without locking anyone in. The reference parameters are:
 
 |  |  |
 | --- | --- |
 | **Time in staking** | **Proportion of ceiling reached** |
-| 1 day | ~3 % |
-| 7 days | ~19 % |
-| 21 days | ~50 % |
-| 30 days | ~63 % |
-| 90 days | ~93 % |
-| 1 year | ~99 % |
+| 1 day | ~2.7 % |
+| 7 days | ~18.9 % |
+| 21 days | ~50.0 % |
+| 30 days | ~63.6 % |
+| 90 days | ~92.7 % |
+| 1 year | ~99.5 % |
+
+These values follow `t / sqrt(t² + c)` with `c = 1,323 days²`, and are therefore fully reproducible.
 
 ### Usage component (supply-based)
 
@@ -53,9 +53,9 @@ The denominator uses the **circulating ZDAO supply**, not a fixed reference magn
 
 The reward is the **integral of the instantaneous rate over the deposit period**, not the final rate applied to the whole period. Because the personal sigmoid has a closed-form antiderivative, the accrual is computed exactly without numerical integration:
 
-$$ reward = amount \cdot \left( a\cdot\left[\sqrt{(T-b)^2 + c} - \sqrt{(0-b)^2 + c}\right] + r_{usage}\cdot T \right) / \left(1\ year\right) $$
+$$ reward = amount \cdot \left( a\cdot\left[\sqrt{T^2 + c} - \sqrt{c}\right] + r_{usage}\cdot T \right) / \left(1\ year\right) $$
 
-where $T$ is the total elapsed time of the position. The sigmoid contribution `a·[√((T−b)²+c) − √((0−b)²+c)]` is the exact integral `∫ r_personal(t) dt` from `0` to `T` (with `r_personal = 0` where `t < b`). This avoids the double counting that would result from multiplying the final instantaneous rate by the whole elapsed period.
+where $T$ is the total elapsed time of the position. The sigmoid contribution `a·[√(T²+c) − √c]` is the exact integral `∫ r_personal(t) dt` from `0` to `T` (with `b = 0`, so the antiderivative `a·√(t²+c)` evaluates to `a·√c` at `t=0`). This avoids the double counting that would result from multiplying the final instantaneous rate by the whole elapsed period.
 
 The combined rate is capped: $r_{personal} + r_{usage} \le MAX\_EMISSION\_RATE$.
 
