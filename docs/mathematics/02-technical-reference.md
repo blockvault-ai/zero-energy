@@ -8,42 +8,32 @@ Reference implementation of the two mechanisms with the greatest economic impact
 
 ```solidity
 uint256 constant MAX_SUPPLY = 1_000_000_000e8; // ZDAO uses 8 decimals
-uint256 constant STAKING_RESERVE = 500_000_000e8;
 
-uint256 public cumulativeMinted; // only grows: burning does NOT reduce it
-uint256 public stakingMinted; // minted by the staking contract
+uint256 public totalSupply; // ERC-20: minted minus burned. Circulating metric.
 
 /// @notice Remaining minting capacity under the absolute ceiling.
 function remainingMintCapacity() public view returns (uint256) {
-    return MAX_SUPPLY - cumulativeMinted;
+    return MAX_SUPPLY - totalSupply;
 }
 
-/// @notice Staking reserve pending to be minted.
-function pendingStakingReserve() public view returns (uint256) {
-    return STAKING_RESERVE - stakingMinted;
-}
-
-/// @dev Invariants I-1 and I-3. Applied on EVERY mint.
+/// @dev Invariant I-1. Applied on EVERY mint.
 function _mint(address to, uint256 amount) internal override {
-    cumulativeMinted += amount; // never decreases
-    require(cumulativeMinted <= MAX_SUPPLY, "max supply exceeded");
+    require(totalSupply + amount <= MAX_SUPPLY, "max supply exceeded");
     super._mint(to, amount);
 }
 
-/// @dev Burning destroys tokens but does NOT restore minting capacity.
+/// @dev Burning destroys tokens and restores minting capacity.
 function burn(uint256 amount) external {
-    _burn(msg.sender, amount); // totalSupply drops, cumulativeMinted does NOT
+    _burn(msg.sender, amount); // totalSupply drops; capacity is restored
 }
 
-/// @dev Only the staking contract mints against the reserve.
+/// @dev Only the staking contract mints rewards, on demand.
 function mintStakingReward(address to, uint256 amount) external onlyStaking {
-    stakingMinted += amount;
-    require(stakingMinted <= STAKING_RESERVE, "staking reserve exceeded");
     _mint(to, amount);
 }
 ```
 
-Note that `burn()` does not touch `cumulativeMinted`: that single omission is what turns the ceiling into a real limit.
+Note that capacity is measured against `totalSupply` (minted minus burned): burning ZDAO directly restores minting capacity, while `MAX_SUPPLY` remains the immutable ceiling.
 
 **A.2 Staking reward accrual** (Section 6.2)
 
@@ -64,27 +54,44 @@ function personalRate(uint256 elapsed) public view returns (uint256) {
     return sigmoidA * uk / sqrt(uk * uk + sigmoidC);
 }
 
-/// @notice Global component. The reference is NOT the max supply of ZREC:
-/// ZREC has no ceiling. See pending decision in 6.2.
-function globalRate() public view returns (uint256) {
-    if (totalStaked >= stakingReference) return maxGlobalRate;
-    return maxGlobalRate * totalStaked / stakingReference;
+/// @notice Usage component (supply-based), linear in staked ZREC
+/// relative to circulating ZDAO supply. Anti-dilutive.
+function usageRate() public view returns (uint256) {
+    uint256 zdaoTs = zdao.totalSupply(); // circulating, minted minus burned
+    uint256 target = zdaoTs * totalSupplyFactor / SCALE;
+    if (totalStaked >= target) return maxUsageRate;
+    return maxUsageRate * totalStaked / target;
 }
 
-/// @notice Accrual. Only what is actually accrued is minted:
-/// the surplus up to the ceiling is NOT issued.
+/// @notice Accrual. Exact integral of the instantaneous rate over the period.
+/// The personal sigmoid has a closed-form antiderivative:
+///   ∫ a·(t-b)/sqrt((t-b)^2+c) dt = a·sqrt((t-b)^2+c)
+/// so the accrued reward is computed exactly without numerical integration.
 function accrued(Position storage p) internal view returns (uint256) {
     uint256 elapsed = block.timestamp - p.startDate;
-    uint256 rate = personalRate(elapsed) + globalRate();
-    uint256 raw = p.amount * rate * elapsed / (YEAR * SCALE);
-    return _applyPeriodCap(raw); // decreasing ceiling of Section 6.3
+    uint256 personal = _personalIntegral(elapsed);
+    uint256 usage = usageRate() * elapsed;
+    uint256 raw = p.amount * (personal + usage) / (YEAR * SCALE);
+    return raw; // no period cap: bounded by MAX_EMISSION_RATE and MAX_SUPPLY
+}
+
+/// @notice Exact integral of the personal sigmoid from 0 to elapsed.
+///   a·( sqrt((T-b)^2+c) − sqrt((0−b)^2+c) ), with rate = 0 where t < b.
+function _personalIntegral(uint256 elapsed) internal view returns (uint256) {
+    int256 Tb = int256(elapsed) - sigmoidB;
+    if (Tb <= 0) return 0; // rate is 0 for all t <= b
+    int256 c0 = sqrt(sigmoidB * sigmoidB + sigmoidC); // sqrt((0-b)^2+c)
+    uint256 sT = sqrt(uint256(Tb) * uint256(Tb) + sigmoidC);
+    uint256 s0 = uint256(c0);
+    if (sT < s0) return 0;
+    return sigmoidA * (sT - s0);
 }
 ```
 
 Implementation notes:
 
 1. Invariants are verified with checks that revert the transaction, not through administrative configuration.
-2. `cumulativeMinted` and `stakingMinted` only increase. No burn operation modifies them.
+2. `totalSupply` only changes on mint and burn. Burning restores capacity; `MAX_SUPPLY` is the immutable ceiling.
 3. Each contribution creates an independent position with its own age computation.
 4. Normalization between ZREC's 3 decimals and ZDAO's 8 decimals must be resolved with integer arithmetic and explicit rounding rules.
-5. `stakingReference` and `_applyPeriodCap` correspond to the pending decisions of Section 11.3.
+5. `usageRate()` reads the circulating `totalSupply` of ZDAO; `totalSupplyFactor` and the rate ceilings are the governance parameters of Section 11.2.

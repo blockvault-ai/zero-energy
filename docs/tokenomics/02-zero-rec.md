@@ -19,7 +19,7 @@ ZREC **has no maximum supply**. It grows as new energy production is certified.
 
 ## 3.2 Fungibility — a single token
 
-ZREC is **a single fungible asset**. There are no distinct tokens for Presale Genesis ZREC, Merits Genesis ZREC, energy-production ZREC, or market-acquired ZREC.
+ZREC is **a single fungible asset**. There are no distinct tokens for Presale ZREC, Merits ZREC, energy-production ZREC, or market-acquired ZREC.
 
 Behavioral differences apply **to the position or the contract where the asset is deposited, never to the token**. A ZREC released from a Merits position is exactly the same asset as any other free ZREC.
 
@@ -27,32 +27,37 @@ Provenance may be kept as historical traceability information, but it does not a
 
 This principle allows the Merits lock to exist without fragmenting the asset or market liquidity.
 
-## 3.3 Two origins
+## 3.3 Three origins
 
 |  |  |  |  |
 | --- | --- | --- | --- |
 | **Origin** | **When** | **How** | **Energy backing** |
-| Genesis ZREC | Claim window (6 months) | Resolution of foundational allocations | No |
+| Presale ZREC | TGE + Claim window (6 months) | Presale allocations resolved to ZREC (Section 5.4) | No |
+| Merits ZREC | TGE + Claim window (6 months) | Merits allocations resolved to ZREC (Section 5.5) | No |
 | Energy ZREC | Permanent, after the window | Certified production via PoE | Yes |
 
-### A. Genesis ZREC
+### A. Presale ZREC
 
-Allows the energy economy and staking to start before sufficient certified production exists. It is resolved **during the Claim**, according to the procedure in Section 5.
+Resolved **during the Claim**, according to Section 5.4. Presale ZREC are **free of Vesting**: no lock, no mandatory staking stay.
 
-**There is no mint-and-burn operation.** When the Genesis Right is exercised, the corresponding ZDAO **never get minted on-chain**. The correct formulation is:
+### B. Merits ZREC
 
-> The exercise of the Genesis Right extinguishes the Claim right over the corresponding amount of ZDAO and enables the equivalent minting of Genesis ZREC.
+Allows the energy economy and staking to start before sufficient certified production exists. It is resolved **during the Claim**, according to Section 5.5.
+
+**There is no mint-and-burn operation.** When a Merits participant chooses ZREC, the corresponding ZDAO **never get minted on-chain**. The correct formulation is:
+
+> The choice of ZREC extinguishes the claim over the corresponding amount of ZDAO and enables the equivalent minting of ZREC, which is automatically deposited in staking with a special withdrawal schedule.
 
 ```mermaid
 flowchart LR
-    A[1 Claim right over 1 ZDAO] --> B[exercise of the Genesis Right]
-    B --> C[extinction of the right to receive ZDAO]
-    C --> D[minting of 1 Genesis ZREC]
+    A["1 Merits allocation<br/>(1 ZDAO, off-chain)"] --> B["choose ZREC"]
+    B --> C[extinction of the claim over ZDAO]
+    C --> D["minting of 1 ZREC<br/>+ automatic staking"]
 ```
 
-Once the six-month window ends, the mechanism is **disabled permanently and irreversibly**.
+Once the six-month window ends, this conversion path is **disabled permanently and irreversibly**.
 
-### B. Energy ZREC
+### C. Energy ZREC
 
 The only ordinary source of issuance after the foundational window. It cumulatively requires real production, validation by Energy Oracles, and batch finalization in accordance with Section 4.
 
@@ -73,20 +78,21 @@ The 50/50 split is governance-configurable between 30 % and 70 % for the Energy 
 
 The protocol permanently and separately publishes:
 
-* Genesis ZREC issued.
+* Presale ZREC issued.
+* Merits ZREC issued.
 * Energy ZREC issued.
 * ZREC withdrawn from circulation, by type.
-* Percentage of the Genesis Issuance offset (Section 3.6).
+* Percentage of the Foundational Issuance offset (Section 3.6).
 
 The separation is **exclusively accounting-related**: it affects the published aggregates, not the units or fungibility.
 
-It is necessary because during the foundational phase virtually all ZREC in circulation will come from the Genesis Issuance and therefore **will not represent energy actually produced**. Publishing both aggregates allows knowing at all times what proportion of the energy asset is backed by real production.
+It is necessary because during the foundational phase virtually all ZREC in circulation will come from the Merits conversion and therefore **will not represent energy actually produced**. Publishing both aggregates allows knowing at all times what proportion of the energy asset is backed by real production.
 
 ## 3.5 Economic value
 
 ZREC has no predetermined price nor fixed parity with respect to ZDAO, any currency, or any other asset. **The protocol does not establish, sustain, or aspire to sustain any value for ZREC.** Its value is freely determined by the market.
 
-## 3.6 Genesis Offset Program
+## 3.6 Foundational Offset Program
 
 It progressively and verifiably accredits that the foundational issuance has been matched by real renewable production.
 
@@ -94,17 +100,17 @@ When the DAO Treasury receives Energy ZREC, it may allocate them to the program:
 
 1. Select ZREC accounted as Energy.
 2. Permanently withdraw them from circulation by burning.
-3. Issue the corresponding **Genesis Offset NFT**.
+3. Issue the corresponding **Foundational Offset NFT**.
 4. Increment the public cumulative offset counter.
 
-**Scope and limits.** The program **does not modify, replace, or individually back** the Genesis ZREC issued. It confers no right of exchange, redemption, or claim over energy. Its function is **accounting and demonstrative**: to publicly attest that the protocol has generated, certified, and withdrawn an amount of real renewable energy equivalent to a fraction of its foundational issuance.
+**Scope and limits.** The program **does not modify, replace, or individually back** the foundational ZREC issued. It confers no right of exchange, redemption, or claim over energy. Its function is **accounting and demonstrative**: to publicly attest that the protocol has generated, certified, and withdrawn an amount of real renewable energy equivalent to a fraction of its foundational issuance.
 
-**Single-use rule.** A certified MWh cannot be counted twice. The Genesis Offset NFT is issued in the name of the DAO Treasury, is marked with that purpose, and **is not transferable nor usable as an environmental offset certificate by third parties**.
+**Single-use rule.** A certified MWh cannot be counted twice. The Foundational Offset NFT is issued in the name of the DAO Treasury, is marked with that purpose, and **is not transferable nor usable as an environmental offset certificate by third parties**.
 
 ## 3.7 Energy Certification NFT
 
-Energy certificate of the protocol. Each NFT represents certified renewable energy permanently withdrawn from circulation, and includes: unique identifier, Energy Producer and source installation, date, certified amount, Oracle validation reference, verifiable hash, and **purpose** (third-party offset or Genesis Offset).
+Energy certificate of the protocol. Each NFT represents certified renewable energy permanently withdrawn from circulation, and includes: unique identifier, Energy Producer and source installation, date, certified amount, Oracle validation reference, verifiable hash, and **purpose** (third-party offset or Foundational Offset).
 
-The purpose field determines the regime: Genesis Offset certificates are governed by Section 3.6 and are not transferable.
+The purpose field determines the regime: Foundational Offset certificates are governed by Section 3.6 and are not transferable. The **Foundational Offset NFT** (Section 3.6) is therefore an instance of the Energy Certification NFT with `purpose = Foundational Offset`, not a distinct NFT type.
 
 > **Delimitation.** ZREC certifies **renewable generation verified by the protocol**. The NFT certifies the **withdrawal** within the protocol. Neither automatically equates to an official Guarantee of Origin, an I-REC, or any other regulated certificate, unless the corresponding integration and accreditation exists. This distinction must be maintained in all communications.

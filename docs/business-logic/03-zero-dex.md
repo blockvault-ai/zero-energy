@@ -21,7 +21,11 @@ They are integrated progressively: exchange of ZDAO, ZREC and compatible assets;
 
 ## 7.3 Fees
 
-Operations generate a fee on the traded volume, collected in the input asset and consolidated periodically.
+Operations generate a **fee on the traded volume**, collected in the input asset and consolidated periodically.
+
+**Fee rate: 0.30 % on volume (initial), configurable by governance within the range 0.05 % – 1.00 %** (Section 11.2).
+
+The fee is split among the following destinations:
 
 |  |  |  |
 | --- | --- | --- |

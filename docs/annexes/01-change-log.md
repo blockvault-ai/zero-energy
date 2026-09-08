@@ -2,7 +2,61 @@
 
 # ANNEX B — CHANGE LOG
 
-Changes in version 2.0 relative to 1.2, for individual review by governance.
+## Changes in version 3.2 (relative to 3.1)
+
+**Economic changes — dynamic mintable/burnable emission**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The supply metric changes from `CumulativeMinted` to the circulating `totalSupply`. Burning now **restores minting capacity**; `MAX_SUPPLY` remains the absolute ceiling | 2.1 and 2.2 |
+| 2 | The allocation table expresses **maximum limits**, not fixed amounts. Presale and Merits are linked to what is actually raised/claimed | 2.3 |
+| 3 | The fixed 500M staking reserve and the decreasing emission curve (250/125/62.5/31.25M) are **removed** | 6.3 |
+| 4 | The reward model gains a **usage component** (supply-based, anti-dilutive) driven by ZREC staked relative to circulating ZDAO supply; the "global component" is replaced | 6.2 |
+| 5 | Emission is **on-demand**: only the accrued reward is minted, no LP surplus | 6.2 |
+| 6 | New governance parameters: `MAX_EMISSION_RATE`, usage ceiling, `totalSupplyFactor` | 11.2 |
+| 7 | A documentation-only `implementation/` folder is added, adapting EasyStaking as the staking base | implementation |
+
+---
+
+## Changes in version 3.1 (relative to 3.0)
+
+**Architecture changes**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The **Presale delivers ZDAO or ZREC** at the participant's choice, both free of Vesting (no lock, no mandatory staking stay) | 5.4 |
+| 2 | ZREC origins are expanded from two to **three**: Presale ZREC, Merits ZREC, and Energy ZREC | 3.3 |
+
+---
+
+## Changes in version 3.0 (relative to 2.0)
+
+**Architecture changes**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The concept of **ZREC Genesis is removed**. ZREC is a single fungible asset with two accounting origins: Merits (foundational) and Energy (certified production) | 3.2 and 3.3 |
+| 2 | The **Genesis Right is removed**. The Merits choice between ZDAO and ZREC is a plain choice at claim time, resolved on the off-chain allocation | 5.3 |
+| 3 | A **Token Generation Event (TGE)** is defined as the launch milestone that fixes the reference date and opens the 6-month Claim window | 5.2 |
+| 4 | The **Presale delivers ZDAO only**; the ZREC option (former Option B) is removed | 5.4 |
+| 5 | **Merits participants choose** between ZDAO (free) or ZREC (cliff 6 months + 2 % monthly, remaining in staking and producing free ZDAO) | 5.5 |
+| 6 | The **Genesis Offset Program** is renamed **Foundational Offset Program**; the Genesis Offset NFT is an instance of the Energy Certification NFT with `purpose = Foundational Offset` | 3.6 and 3.7 |
+| 7 | Invariants I-4/I-5 (Genesis Right) are removed; the decreasing issuance curve is classified as an invariant | 11.1 |
+
+**Economic changes**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 8 | The staking accrual is reformulated as the **exact integral** of the instantaneous rate (closed-form antiderivative of the sigmoid), removing the double time dependence | 6.2 |
+| 9 | The ZERO DEX fee rate is defined (initial 0.30 %, range 0.05 % – 1.00 %); the burn trigger mechanism is specified | 7.3 and 2.6 |
+
+---
+
+## Changes in version 2.0 relative to 1.2
 
 **Architecture changes**
 

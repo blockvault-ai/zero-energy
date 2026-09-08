@@ -34,39 +34,41 @@ The curve grows quickly at first and then flattens: it rewards permanence withou
 | 90 days | ~93 % |
 | 1 year | ~99 % |
 
-### Global component (participation in the system)
+### Usage component (supply-based)
 
-Depends on the aggregate level of participation: the higher the deposited volume relative to a reference magnitude, the higher the rate, up to its ceiling.
+The second component ties the rate to real usage: it rises with the amount of ZREC staked relative to the circulating ZDAO supply. The higher the staking participation and the lower the ZDAO in circulation, the higher the rate, up to its ceiling. This is **anti-dilutive**: as more ZDAO enters circulation, the emission rate falls.
 
-$$ r_{global} = r_{max} \cdot \min\!\left(1,\; \frac{ZREC_{staked}}{reference}\right) $$
+$$ r_{usage} = r_{usage,max} \cdot \min\!\left(1,\; \frac{ZREC_{staked}}{totalSupply_{ZDAO} \cdot totalSupplyFactor}\right) $$
 
-> **Mandatory adaptation.** The reference model computes this magnitude over the maximum supply of the deposited token. **ZREC has no maximum supply**: it grows with certified energy production. Therefore the reference **cannot be MAX_SUPPLY** and must be defined specifically for the ZREC economy — for example, a magnitude of ZREC eligible for staking or a mathematically suitable equivalent. The concrete parameter remains pending definitive implementation.
+| Variable | Definition |
+| --- | --- |
+| $r_{usage,max}$ | usage component ceiling (≤ half of MAX_EMISSION_RATE) |
+| $ZREC_{staked}$ | total ZREC deposited in staking |
+| $totalSupply_{ZDAO}$ | circulating ZDAO supply (minted minus burned) |
+| $totalSupplyFactor$ | governance parameter (10%–100%): percentage of `totalSupply` used as the denominator. Larger factor ⇒ smaller rate |
+
+The denominator uses the **circulating ZDAO supply**, not a fixed reference magnitude: because ZDAO is mintable/burnable, the reference moves with the actual economy. No fixed reserve or schedule is involved.
 
 ### Accrual
 
-$$ reward = amount \cdot (r_{personal} + r_{global}) \cdot \frac{time}{1\ year} $$
+The reward is the **integral of the instantaneous rate over the deposit period**, not the final rate applied to the whole period. Because the personal sigmoid has a closed-form antiderivative, the accrual is computed exactly without numerical integration:
 
-**Only the ZDAO actually accrued are minted.** ZDAO not needed for rewards are not minted. This is a deliberate deviation from the reference model, which always mints to the maximum and allocates the surplus to a liquidity address; ZERO Energy **does not adopt that distribution**, because it would consume the reserve at the maximum rate regardless of actual participation.
+$$ reward = amount \cdot \left( a\cdot\left[\sqrt{(T-b)^2 + c} - \sqrt{(0-b)^2 + c}\right] + r_{usage}\cdot T \right) / \left(1\ year\right) $$
 
-## 6.3 Issuance limit
+where $T$ is the total elapsed time of the position. The sigmoid contribution `a·[√((T−b)²+c) − √((0−b)²+c)]` is the exact integral `∫ r_personal(t) dt` from `0` to `T` (with `r_personal = 0` where `t < b`). This avoids the double counting that would result from multiplying the final instantaneous rate by the whole elapsed period.
 
-Two limits operate cumulatively on the result of the previous formulas.
+The combined rate is capped: $r_{personal} + r_{usage} \le MAX\_EMISSION\_RATE$.
 
-**1. Absolute reserve — invariant.** 500,000,000 ZDAO. It cannot be allocated to treasury, team, liquidity, Merits, campaigns, strategic emissions, or any purpose other than staking.
+**Only the ZDAO actually accrued are minted.** There is no fixed reserve and no surplus allocation to a liquidity address: ZDAO not needed for rewards are simply never minted. This keeps emission strictly proportional to usage.
 
-**2. Decreasing maximum curve.** Issuance ceiling per period, as an upper-bound reference:
+## 6.3 Issuance: on-demand, bounded by MAX_SUPPLY
 
-|  |  |
-| --- | --- |
-| **Period** | **Maximum issuance** |
-| Year 1 | up to 250,000,000 ZDAO |
-| Year 2 | up to 125,000,000 ZDAO |
-| Year 3 | up to 62,500,000 ZDAO |
-| Year 4 | up to 31,250,000 ZDAO |
-| Subsequent | following the decreasing curve |
+There is **no fixed reserve and no decreasing schedule**. ZDAO is minted **on demand**, only when a reward is legitimately accrued, and is bounded by a single hard limit:
 
-> These values are **maximum ceilings, not issuance obligations**. If accrued rewards are below the available maximum, the difference is **not minted automatically**. The document must not describe these amounts as figures that will necessarily enter circulation.
+**1. Absolute ceiling — invariant.** `totalSupply(ZDAO) ≤ 1,000,000,000`. Verified on every mint (Section 2.1).
 
-**Why the ceiling is necessary.** ZREC grows without limit as certified production increases. A percentage rate applied over a growing base produces growing issuance: without a ceiling, the greater the protocol's energy success, the sooner the rewards reserve would be exhausted. The decreasing curve bounds that risk.
+**2. Rate ceilings.** The emission rate itself is bounded by `MAX_EMISSION_RATE` (personal + usage components), a governance parameter, not a monetary amount.
 
-⬜ **Pending definitive implementation:** the adjustment mechanism when aggregate accrual exceeds the period ceiling. The anticipated criterion is pro-rata reduction among active positions.
+Because ZDAO is mintable/burnable, the circulating supply contracts when ZDAO is burned (Section 2.6), restoring capacity. Emission therefore tracks real usage — staking participation and circulating supply — rather than a predetermined calendar or reserve.
+
+**Why a rate ceiling is necessary.** ZREC grows without limit as certified production increases. A percentage rate applied over a growing staked base produces growing issuance; the `MAX_EMISSION_RATE` cap, combined with the anti-dilutive usage component (which falls as ZDAO supply grows), bounds that risk without resorting to fixed monetary ceilings.

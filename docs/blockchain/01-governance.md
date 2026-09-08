@@ -19,9 +19,9 @@ The protocol recognizes exclusively the following permissions. No other permissi
 |  |  |  |  |
 | --- | --- | --- | --- |
 | **Permission** | **Holder** | **Scope** | **Destination** |
-| Reward minting | Staking contract | 500M reserve | Permanent |
+| Reward minting | Staking contract | On-demand, bounded by MAX_SUPPLY | Permanent |
 | Minting via Claim | Claim contract | Allocations from the published root | Extinguishes when the window closes |
-| ZREC Genesis minting | Claim contract | Rights exercised | Extinguishes when the window closes |
+| Foundational ZREC minting | Claim contract | Merits choices resolved to ZREC | Extinguishes when the window closes |
 | Energy minting of ZREC | Energy Issuance contract | Finalized batches | Permanent |
 | Oracle operation | ZERO Energy | Signature of validations | Opens to third parties (Milestone 3) |
 | Strategic minting | Governance | Strategic Issuances | Subject to the supply invariant |
@@ -69,7 +69,7 @@ Each milestone entails an **irreversible renunciation** of a control capability:
 |  |  |  |
 | --- | --- | --- |
 | **Milestone** | **Renunciation** | **Verification** |
-| 1. Closure of the foundational window | Claim and the Genesis Right are disabled | The functions revert unconditionally |
+| 1. Closure of the foundational window | Claim is disabled | The functions revert unconditionally |
 | 2. Consolidation of issuance | The ZDAO minting permissions are extinguished except staking and strategic | Public list of authorized addresses |
 | 3. Independence of validation | ZERO Energy ceases to control energy validation | Public list of oracles and their accredited independence |
 | 4. Maturity of the ecosystem | Criteria defined by governance | Published metrics |
@@ -80,6 +80,6 @@ Each milestone entails an **irreversible renunciation** of a control capability:
 
 ## 8.7 State publication
 
-The protocol publishes permanently and queryably: the milestone reached and the transaction of each renunciation executed; the list of addresses with active minting permission; the pending transactions in the timelock; the composition of the Committee and of the oracle set, with indication of their operator; `CumulativeMinted`, `totalSupply`, and remaining issuance capacity; the state of the staking reserve; the number of registered installations and the accumulated certified energy; and the percentage of Genesis Issuance compensated.
+The protocol publishes permanently and queryably: the milestone reached and the transaction of each renunciation executed; the list of addresses with active minting permission; the pending transactions in the timelock; the composition of the Committee and of the oracle set, with indication of their operator; `totalSupply`, and remaining issuance capacity; the state of staking; the number of registered installations and the accumulated certified energy; and the percentage of Foundational Issuance compensated.
 
 > The degree of decentralization of a protocol is not declared: it is demonstrated through the list of capabilities that have been renounced in a verifiable manner.

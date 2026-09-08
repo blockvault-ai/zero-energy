@@ -1,6 +1,6 @@
 <!-- Origen: ZERO-ENERGY-Especificacion-Tecnica-v2.0.md -->
 
-# 5. FOUNDATIONAL PHASE: PRESALE, CLAIM AND GENESIS
+# 5. FOUNDATIONAL PHASE: PRESALE, TGE AND CLAIM
 
 ## 5.1 Presale
 
@@ -18,101 +18,83 @@ Initial funding mechanism. Allocations are recorded **off-chain**; ZDAO are mint
 | 5 | 70 % – 100 % | 60,000,000 | 0.75 USDC | 10 USDC | 45,000,000 |
 | Total |  | 200,000,000 | 0.575 average |  | 115,000,000 |
 
+The **Raised** column and the **0.575 average price** are **theoretical maxima**: they assume full subscription of all five tranches. Since tranches remain available until their units are exhausted, the actually raised amount may be lower.
+
 **The tranches operate in parallel.** Each tranche has an independent allocation and remains available until its units are exhausted or until another closing condition established by the protocol occurs. **It is not necessary to exhaust one tranche to enable the next.** The minimum investment is the access criterion for each tranche.
 
 **Unallocated supply.** Presale ZDAO that are not allocated are not minted and are not automatically transferred to any other program.
 
 The resources obtained are allocated to the development of the blockchain and energy infrastructure, contract implementation and auditing, producer onboarding, ZERO DEX development and ecosystem growth.
 
-## 5.2 Single Claim and Genesis window
+## 5.2 Token Generation Event (TGE) and Claim window
 
-**Claim and Genesis Issuance are not consecutive phases: they are a single operating window of six (6) months.**
+**The TGE is the launch milestone that fixes the reference date and opens the Claim window.** It does not mint or distribute assets by itself: minting occurs only when a participant claims their allocation.
 
-The decision on asset onboarding is made **directly during the Claim**, based on the off-chain foundational record and **before the assets enter free circulation**. This removes the previous model of "Claim → receive ZDAO → subsequent conversion".
+* The TGE fixes the reference date (`t0`) from which the Claim window and the Merits schedules are computed.
+* The Claim window lasts **six (6) months** from the TGE.
+* Presale participants choose, at claim time, between ZDAO or ZREC (both free of Vesting).
+* Merits participants choose, at claim time, between ZDAO or ZREC.
+* The staking positions corresponding to Merits ZREC are created automatically.
 
-During the window:
-
-* Presale participants choose between ZDAO or ZREC Genesis.
-* Merits participants resolve their allocations directly into ZREC Genesis.
-* The staking positions corresponding to the Merits ZREC are created.
-
-Once the window closes, the ordinary possibility of exercising the Genesis Right closes as well.
+Once the window closes, the possibility of claiming a foundational allocation closes as well, and unclaimed allocations are treated according to the pending decision below.
 
 ⬜ **Pending protocol decision:** the definitive treatment of allocations that did not perform a Claim within the window. It is not established in this document because no express decision yet exists.
 
-## 5.3 The Genesis Right
+## 5.3 Claim choices
 
-**Central concept of the foundational phase.**
-
-The Genesis Right **is not a property of the ERC-20 ZDAO token**. It is a right associated exclusively with certain foundational allocations recorded off-chain, and it is resolved a single time during the Claim.
-
-This architecture is a necessary consequence of the fungibility established in Section 2.4: an ERC-20 cannot distinguish the provenance of the tokens in a balance, so no origin-based restriction can be implemented on the token. It is implemented on the allocation.
-
-**Single-consumption principle.** The allocation admits two terminal states:
+**There is no special "right" attached to a foundational allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption:
 
 ```mermaid
 flowchart TD
-    A[PENDING] --> B["CLAIM ZDAO<br/>(Genesis Right extinguished)"]
-    A --> C["CLAIM ZREC GENESIS<br/>(right to receive ZDAO extinguished)"]
+    A[PENDING] --> B["CLAIM ZDAO"]
+    A --> C["CLAIM ZREC"]
 ```
 
-Once either option is executed, the allocation is definitively consumed. Consequently:
+Once an option is executed, the allocation is definitively consumed. Consequently:
 
 * A second Claim cannot be performed on the same allocation.
-* The Genesis Right cannot be recovered afterwards.
-* **The sale or transfer of ZDAO does not transfer the Genesis Right.**
 * It cannot be duplicated using different wallets.
-* It cannot be exercised with ZDAO acquired on secondary markets.
+* It cannot be exercised with tokens acquired on secondary markets.
 
-This eliminates by design the vector: \*wallet A claims ZDAO → transfers them to wallet B → wallet B tries to exercise Genesis\*. The operation is impossible because the right was consumed in the initial Claim.
+Because ZDAO and ZREC are ordinary fungible tokens (Sections 2.4 and 3.2), an ERC-20 cannot distinguish the provenance of the tokens in a balance. The choice is therefore resolved on the off-chain allocation record during the Claim, never on the token. This eliminates by design the vector \*wallet A claims → transfers to wallet B → wallet B tries to claim again\*: the operation is impossible because the allocation was consumed in the initial Claim.
 
-**This rule is a fundamental security principle of the protocol.**
+## 5.4 Presale branch: ZDAO or ZREC
 
-## 5.4 Presale branch: single choice
-
-Presale allocations **are free of Vesting**. During the Claim, the participant chooses between two mutually exclusive options.
-
-**Option A — Direct Claim in ZDAO**
+Presale allocations deliver either **ZDAO or ZREC**, at the participant's choice at claim time. Both options are **free of Vesting**: no lock, no mandatory staking stay.
 
 ```mermaid
 flowchart LR
-    A[Off-chain allocation] --> B[Claim] --> C[ZDAO choice]
-    C --> D[on-chain minting and delivery] --> E[wallet]
+    A[Off-chain allocation] --> B[Claim]
+    B --> C["choose ZDAO<br/>(free)"]
+    B --> D["choose ZREC<br/>(free)"]
 ```
 
-The ZDAO received are completely free, fungible and transferable, with no Vesting and no lock. The Genesis Right is consumed and extinguished: they may no longer be used to mint ZREC Genesis, and no subsequent acquirer will obtain any right whatsoever.
+Ratio: **1 Presale allocation = 1 ZDAO or 1 ZREC**. There is no burn: the ZDAO of a ZREC choice are never minted.
 
-**Option B — Exercise of the Genesis Right**
-
-```mermaid
-flowchart LR
-    A[Off-chain allocation] --> B[Claim] --> C[exercise of the Genesis Right]
-    C --> D[extinction of the right to receive ZDAO]
-    D --> E[minting of ZREC Genesis] --> F[wallet]
-```
-
-Ratio: **1 Claim right over 1 Presale ZDAO = 1 ZREC Genesis**. The corresponding ZDAO are not minted, so **this operation does not constitute a burn**.
-
-The ZREC Genesis thus obtained are **completely free**: no Vesting, no mandatory lock and no minimum staking stay. They may be held, transferred, sold, swapped, provided as liquidity, used in the ZERO DEX or voluntarily deposited in staking, with withdrawal according to the general rules.
+* **ZDAO** — minted on-chain, completely free, fungible and transferable, with no lock.
+* **ZREC** — minted on-chain, completely free, with no Vesting, no lock and no minimum staking stay. The participant may hold, transfer, sell, swap, provide as liquidity, or voluntarily deposit in staking under the general withdrawal rules.
 
 This route gives Presale participants a direct entry into the protocol's energy economy and into ZREC staking.
 
-## 5.5 Merits branch: conversion and automatic staking
+## 5.5 Merits branch: ZDAO or ZREC
 
-The allocations of the Merits Program are recorded off-chain denominated in ZDAO, but **those ZDAO are not minted on-chain**.
+Merits allocations are recorded off-chain denominated in ZDAO. At claim time, the participant **chooses between two options**:
+
+* **ZDAO** — the ZDAO are minted on-chain, free and transferable, with no Vesting.
+* **ZREC** — the participant does not receive ZDAO; instead an equivalent amount of ZREC is minted and **automatically deposited in staking**, where it remains producing ZDAO under a special withdrawal schedule.
 
 ```mermaid
 flowchart LR
-    A["Merits ZDAO allocation<br/>(off-chain)"] --> B[Claim]
-    B --> C[extinction of the right to receive ZDAO]
-    C --> D[direct minting of ZREC Genesis] --> E[automatic deposit in staking]
+    A["Merits allocation<br/>(off-chain, in ZDAO)"] --> B[Claim]
+    B --> C["choose ZDAO<br/>(free)"]
+    B --> D["choose ZREC<br/>(vesting + staking)"]
 ```
 
-Ratio: **1 ZDAO allocated through Merits = 1 ZREC Genesis**. Neither is there a burn here: the ZDAO were never minted.
+Ratio: **1 ZDAO allocated through Merits = 1 ZREC** (or 1 ZDAO, if the ZDAO option is chosen). There is no burn: the ZDAO of a ZREC choice are never minted.
 
-**There is no Vesting contract.** Any Genesis Vesting Vault, independent Vesting contract or equivalent architecture is eliminated. The time restrictions are implemented **directly through the withdrawal rules of the position within the Official Staking System**.
+**There is no Vesting contract.** The time restrictions are implemented **directly through the withdrawal rules of the position within the Official Staking System**. The correct formulation is **"Merits ZREC → Staking with a special withdrawal schedule"**.
 
-The correct formulation is not "ZREC in Vesting → Staking", but **"Merits ZREC Genesis → Staking with a special withdrawal schedule"**.
+The ZREC chosen remain **in staking for the whole schedule**, producing ZDAO from day one. The ZDAO generated as rewards are **free and transferable immediately** (Section 6.5): the lock applies only to the deposited ZREC principal.
 
 **Availability schedule**
 

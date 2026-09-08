@@ -6,64 +6,71 @@ ERC-20 governance and incentive token of the protocol, deployed on Base. **8 dec
 
 ## 2.1 Supply magnitudes
 
-The document precisely distinguishes six magnitudes that must not be confused:
+The document distinguishes six magnitudes that must not be confused:
 
 |  |  |
 | --- | --- |
 | **Magnitude** | **Definition** |
 | MAX_SUPPLY | 1,000,000,000 ZDAO. Absolute ceiling, never exceedable |
-| CumulativeMinted | Total historically minted. Only grows, never decreases |
-| totalSupply | ZDAO existing now (minted minus burned) |
+| totalSupply | ZDAO currently in existence (minted minus burned). This is the **circulating metric** against which minting capacity is measured |
 | Circulating supply | totalSupply minus locked positions |
+| Minting capacity | `MAX_SUPPLY - totalSupply`. Recovered when ZDAO is burned |
 | Off-chain allocations | Rights registered in Presale and Merits, not yet minted |
-| Burned ZDAO | Permanently destroyed |
+| Burned ZDAO | Permanently destroyed; reduces `totalSupply` |
 
-**Invariant:** `CumulativeMinted <= MAX_SUPPLY`, verified on every mint.
+**Invariant:** `totalSupply <= MAX_SUPPLY`, verified on every mint.
 
-## 2.2 Burning does not regenerate issuance capacity
+ZDAO is **mintable and burnable**: it is minted against legitimate accrual (staking) and governed issuances, and burned through the mechanisms of Sections 2.6 and 3.6. The only fixed figure in the entire supply is the `MAX_SUPPLY` ceiling; all other magnitudes are dynamic and derive from actual usage.
 
-This is the central economic rule of the supply and must be implemented explicitly.
+## 2.2 Burning regenerates issuance capacity
 
-Burned ZDAO are permanently destroyed. Burning **reduces `totalSupply` but does not reduce `CumulativeMinted`**, and therefore **does not free up minting capacity**.
+Burned ZDAO are permanently destroyed and **reduce `totalSupply`**, thereby **restoring minting capacity**. Capacity is measured against the circulating `totalSupply`, not against a monotonic historical counter.
 
 Example:
  MAX_SUPPLY .............. 1,000M
- CumulativeMinted ........ 600M
+ totalSupply ............. 600M
  Burned .................. 100M
- totalSupply ............. 500M
+ totalSupply (after) ..... 500M
 
- Remaining issuance capacity = 1,000M - 600M = 400M
- (NOT 500M: the 100M burned do not return)
+ Remaining issuance capacity = 1,000M - 500M = 500M
+ (the 100M burned returned as available capacity)
 
-Without this rule, every burn would open margin to mint again and the 1,000M ceiling would cease to be a real limit: a mint-and-burn cycle alone would suffice to issue indefinitely.
+This is the mintable/burnable cycle: ZDAO is minted against usage (staking rewards, governed issuances) and burned through fees and offset mechanisms, so the circulating supply expands and contracts with real protocol activity rather than following a predetermined schedule.
+
+**`MAX_SUPPLY` remains the absolute, immutable ceiling.** A mint-and-burn cycle can never cause totalSupply to exceed MAX_SUPPLY: every mint verifies `totalSupply <= MAX_SUPPLY`. Burning cannot be exploited to exceed the ceiling, because the ceiling bounds the instantaneous supply, not a lifetime total.
 
 Consequences that must be respected in all protocol communications:
 
-* A burn **must never be described as "new available supply"**.
-* Any future extraordinary policy on issuance capacity requires express governance authorization, must respect MAX_SUPPLY and the immutable reserves, and **cannot be presented as an automatic consequence of a burn**.
+* A burn **may** be described as "restoring minting capacity", but never as "new tokens in circulation".
+* Any future policy on the ceiling requires express governance authorization and cannot be presented as an automatic consequence of a burn.
 
-## 2.3 Supply distribution
+## 2.3 Allocation limits
 
 |  |  |  |  |
 | --- | --- | --- | --- |
-| **Program** | **Allocation** | **%** | **Nature** |
-| Presale | 200,000,000 | 20 % | Foundational allocation (Section 5) |
-| Merits and Ecosystem | 100,000,000 | 10 % | Single contribution bucket |
-| Staking Rewards | 500,000,000 | 50 % | Immutable reserve (Section 6) |
-| Strategic Issuances | 200,000,000 | 20 % | Requires express DAO approval |
-| Total | 1,000,000,000 | 100 % |  |
+| **Program** | **Maximum limit** | **%** | **Nature** |
+| Presale | up to 200,000,000 | 20 % | Foundational allocation (Section 5) |
+| Merits and Ecosystem | up to 100,000,000 | 10 % | Single contribution bucket |
+| Staking Rewards | dynamic, capped by MAX_SUPPLY | — | On-demand accrual (Section 6) |
+| Strategic Issuances | up to 200,000,000 | 20 % | Requires express DAO approval |
+
+This table expresses **maximum limits**, not fixed amounts to be minted. Actual issuance derives from real activity:
+
+* **Presale and Merits** are linked to what is actually raised and claimed, and may be resolved, at the participant's choice, into ZREC instead of ZDAO (Sections 5.4 and 5.5). The corresponding ZDAO are never minted.
+* **Staking Rewards** have no fixed reserve: ZDAO is minted on demand, only against legitimate accrual (Section 6.2), bounded by `MAX_SUPPLY`.
+* **Strategic Issuances** are an upper bound requiring express DAO approval.
+
+No fixed reserve of ZDAO is pre-allocated to staking. The `MAX_SUPPLY` ceiling is the single hard limit; everything else is dynamic.
 
 **Merits and Ecosystem is a single bucket.** It comprises the founding team, contributors, ambassadors, and user onboarding campaigns. **There are no separate quotas by category.**
 
 **Strategic Issuances.** Intended destinations, of an **indicative and non-binding** nature: market liquidity (150,000,000) and contingencies (50,000,000). Any issuance against this program requires a proposal approved by the DAO and the Section 8 timelock. There is no automatic minting mechanism against this line item.
 
-**Staking Reserve.** The 500,000,000 are an **invariant**. They may not be allocated to treasury, team, liquidity, Merits, campaigns, strategic issuances, or any purpose other than the Official Staking System. Only the staking contract can mint them, and only when a reward has been legitimately accrued. **ZDAO not needed for rewards are not minted.**
-
 ## 2.4 Fungibility
 
 All issued ZDAO are fully fungible. The origin of their issuance does not alter the nature of the asset nor the rights it confers.
 
-A technical consequence derives from this, which the protocol respects in its design: **an ERC-20 cannot distinguish the provenance of the tokens that make up a balance.** Therefore no protocol rule depends on the origin of a specific ZDAO. The Genesis Right, which does depend on origin, is resolved outside the token (Section 5.3).
+A technical consequence derives from this, which the protocol respects in its design: **an ERC-20 cannot distinguish the provenance of the tokens that make up a balance.** Therefore no protocol rule depends on the origin of a specific ZDAO. The Presale and Merits choices between ZDAO and ZREC (Sections 5.4 and 5.5), which do depend on the allocation, are resolved outside the token.
 
 ## 2.5 Functions
 
@@ -88,6 +95,6 @@ flowchart LR
 
 **Initial Burn Execution Threshold: 10,000 ZDAO.** It is a governance-configurable parameter, not an economic constant.
 
-The mechanism avoids hundreds of small-value burn operations, reduces operational cost, and maintains on-chain traceability. Neither the DAO nor the Committee intervenes at execution time: it triggers once the threshold is reached.
+The mechanism avoids hundreds of small-value burn operations, reduces operational cost, and maintains on-chain traceability. Neither the DAO nor the Committee intervenes at execution time: **the burn is triggered automatically by the fee-consolidation routine (a keeper or any user's transaction) once the segregated accumulation reaches the threshold**, and it emits a verifiable on-chain event. The segregated accumulation is held in a dedicated contract balance separate from the circulating supply until execution.
 
 In accordance with Section 2.2, ZDAO burned by this mechanism do not regenerate issuance capacity.

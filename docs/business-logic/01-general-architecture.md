@@ -45,7 +45,7 @@ flowchart TD
 | Function | Governance and incentives | Energy and utility asset |
 | Supply | Absolute maximum of 1,000,000,000 | No predefined maximum |
 | Decimals | 8 | 3 |
-| Origin | Presale, Merits, Staking, Strategic | Genesis and certified production |
+| Origin | Presale, Merits, Staking, Strategic | Presale, Merits and certified production |
 | In staking | Received as a reward | Is the asset that is deposited |
 
 **Structural principle.** ZDAO maintains a strict issuance limit; ZREC expands as certified energy production grows. This separation allows the energy infrastructure to grow without compromising the scarcity of the governance asset. It is the economic foundation of the protocol and must not be altered.
@@ -58,7 +58,7 @@ flowchart TD
 | Physical | Installations, meters, inverters | 4 |
 | Validation | Energy Oracles, Proof of Energy | 4 |
 | Assets | ZDAO and ZREC | 2 and 3 |
-| Onboarding | Presale, Claim and Genesis | 5 |
+| Onboarding | Presale, TGE and Claim | 5 |
 | Incentives | Official Staking System | 6 |
 | Interface | ZERO DEX (Dashboard) | 7 |
 | Governance | DAO, Committee, decentralization milestones | 8 |
@@ -68,13 +68,13 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["PRESALE / MERITS<br/>(off-chain)"]
-    B["CLAIM + GENESIS RESOLUTION<br/>(single 6-month window)"]
-    P["PRESALE BRANCH<br/>single choice"]
-    P1["a) free ZDAO"]
-    P2["b) free ZREC Genesis"]
-    M["MERITS BRANCH<br/>direct conversion"]
-    M1[ZREC Genesis]
-    M2[automatic staking]
+    B["TGE + CLAIM<br/>(single 6-month window)"]
+    P["PRESALE BRANCH<br/>choice at claim"]
+    P1["free ZDAO"]
+    P2["free ZREC<br/>(no vesting)"]
+    M["MERITS BRANCH<br/>choice at claim"]
+    M1["ZDAO (free)"]
+    M2["ZREC (vesting)<br/>automatic staking"]
     M3[6 months lock]
     M4[2% monthly x 50 months]
     D["ZERO DEX (Dashboard)<br/>staking · market · liquidity · governance"]
@@ -87,10 +87,13 @@ flowchart TD
     B --> M
     P --> P1
     P --> P2
-    M --> M1 --> M2 --> M3
+    M --> M1
+    M --> M2
+    M2 --> M3
     M2 --> M4
     P1 --> D
     P2 --> D
+    M1 --> D
     M3 --> D
     M4 --> D
     D --> R --> V --> O

@@ -70,7 +70,7 @@ Before the first issuance, each installation is registered with: unique identifi
 | B | Identification | Verifiable link between the physical installation, holder, meter, inverter, and monitoring system |
 | C | Empirical validation | Contrast between recorded production and the nominal capacity and physical characteristics |
 
-Empirical validation turns nominal power into a **physical coherence barrier**: an installation registered as 10 kWp that systematically declares 500 kWh/h describes a physical impossibility, and the system can generate alerts, review, provisional suspension, or a request for additional information.
+Empirical validation turns nominal power into a **physical coherence barrier**: an installation registered as 10 kWp that systematically declares 500 kW describes a physical impossibility, and the system can generate alerts, review, provisional suspension, or a request for additional information.
 
 Plausibility checks applicable to any production data:
 
