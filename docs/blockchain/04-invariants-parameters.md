@@ -11,15 +11,16 @@ They cannot be modified by any governance mechanism or by contract upgrades. The
 |  |  |  |
 | --- | --- | --- |
 |  | **Invariant** | **Section** |
-| I-1 | `totalSupply` of ZDAO never exceeds 1,000,000,000 | 2.1 |
-| I-2 | Burning reduces `totalSupply` and restores minting capacity; `MAX_SUPPLY` remains the absolute ceiling | 2.2 |
-| I-3 | ZDAO is minted exclusively against legitimate staking accrual (on demand) or an approved governance issuance; only the staking contract mints rewards | 2.3 and 6.2 |
-| I-4 | A foundational allocation is consumed only once; the choice between ZDAO and ZREC resides in the off-chain record, never in the token | 5.3 |
-| I-5 | ZREC is a single fungible asset; the restrictions live in the positions, never in the token | 3.2 |
-| I-6 | No unit of energy can sustain more than one issuance nor more than one certificate | 4.2 |
-| I-7 | A batch in FINALIZED state cannot be reused | 4.6 |
-| I-8 | No minting may be authorized by a non-reproducible criterion | 4.5 |
-| I-9 | The DAO is the supreme authority; the Committee only exercises delegated competences | 8.1 |
+| I-1 | `CumulativeMinted` of ZDAO never exceeds 1,000,000,000 | 2.1 |
+| I-2 | Burning does not reduce `CumulativeMinted` nor regenerate issuance capacity | 2.2 |
+| I-3 | 500,000,000 ZDAO remain reserved exclusively for the Official Staking System and only the staking contract can mint them | 2.3 and 6.3 |
+| I-4 | The decreasing issuance curve (250/125/62.5/31.25M) is an absolute annual ceiling | 6.3 |
+| I-5 | A foundational allocation is consumed only once; the choice between ZDAO and ZREC resides in the off-chain record, never in the token | 5.3 |
+| I-6 | ZREC is a single fungible asset; the restrictions live in the positions, never in the token | 3.2 |
+| I-7 | No unit of energy can sustain more than one issuance nor more than one certificate | 4.2 |
+| I-8 | A batch in FINALIZED state cannot be reused | 4.6 |
+| I-9 | No minting may be authorized by a non-reproducible criterion | 4.5 |
+| I-10 | The DAO is the supreme authority; the Committee only exercises delegated competences | 8.1 |
 
 ## 11.2 Configurable parameters
 

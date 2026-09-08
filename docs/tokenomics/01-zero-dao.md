@@ -12,37 +12,38 @@ The document distinguishes these magnitudes that must not be confused:
 | --- | --- |
 | **Magnitude** | **Definition** |
 | MAX_SUPPLY | 1,000,000,000 ZDAO. Absolute ceiling, never exceedable |
-| totalSupply | ZDAO currently in existence (minted minus burned). This is the **circulating metric** against which minting capacity is measured |
-| Minting capacity | `MAX_SUPPLY - totalSupply`. Recovered when ZDAO is burned |
+| CumulativeMinted | Total ZDAO historically minted. **Only grows; burning does not reduce it**. Every contract minting is recorded here to compute how much has been minted at any time |
+| totalSupply | ZDAO currently in existence (minted minus burned) |
+| Minting capacity | `MAX_SUPPLY - CumulativeMinted`. **Not** recovered when ZDAO is burned |
 | Off-chain allocations | Rights registered in Presale and Merits, not yet minted |
-| Burned ZDAO | Permanently destroyed; reduces `totalSupply` |
+| Burned ZDAO | Permanently destroyed; reduces `totalSupply` but not `CumulativeMinted` |
 
-**Invariant:** `totalSupply <= MAX_SUPPLY`, verified on every mint.
+**Invariant:** `CumulativeMinted <= MAX_SUPPLY`, verified on every mint.
 
-> **Note on terminology.** ZDAO has **no locked positions**: staking rewards are free and transferable immediately (Section 6.5), and the Merits lock applies to the deposited ZREC principal, never to ZDAO. Therefore `totalSupply` **is** the circulating supply — there is no separate "circulating" magnitude to subtract locked ZDAO from.
+> **Note on terminology.** Every minting is recorded in `CumulativeMinted`, the protocol's counter of how much has been minted so far. ZDAO has **no locked positions**: staking rewards are free and transferable immediately (Section 6.5), and the Merits lock applies to the deposited ZREC principal, never to ZDAO. Therefore `totalSupply` equals the circulating supply actually in existence.
 
-ZDAO is **mintable and burnable**: it is minted against legitimate accrual (staking) and governed issuances, and burned through the mechanisms of Sections 2.6 and 3.6. The only fixed figure in the entire supply is the `MAX_SUPPLY` ceiling; all other magnitudes are dynamic and derive from actual usage.
+ZDAO is **mintable and burnable**: it is minted against legitimate accrual (staking) and governed issuances, and burned through the mechanisms of Sections 2.6 and 3.6. The fixed figures are `MAX_SUPPLY`, the staking reserve (500M), and the decreasing issuance curve (Section 6.3); the rest derives from actual usage.
 
-## 2.2 Burning regenerates issuance capacity
+## 2.2 Burning does not regenerate issuance capacity
 
-Burned ZDAO are permanently destroyed and **reduce `totalSupply`**, thereby **restoring minting capacity**. Capacity is measured against the circulating `totalSupply`, not against a monotonic historical counter.
+Burned ZDAO are permanently destroyed and **reduce `totalSupply`, but do not reduce `CumulativeMinted`**, and therefore **do not free up minting capacity**.
 
 Example:
  MAX_SUPPLY .............. 1,000M
- totalSupply ............. 600M
+ CumulativeMinted ........ 600M
  Burned .................. 100M
- totalSupply (after) ..... 500M
+ totalSupply ............. 500M
 
- Remaining issuance capacity = 1,000M - 500M = 500M
- (the 100M burned returned as available capacity)
+ Remaining issuance capacity = 1,000M - 600M = 400M
+ (NOT 500M: the 100M burned do not return)
 
-This is the mintable/burnable cycle: ZDAO is minted against usage (staking rewards, governed issuances) and burned through fees and offset mechanisms, so the circulating supply expands and contracts with real protocol activity rather than following a predetermined schedule.
+`CumulativeMinted` records every minting permanently, and burning cannot rewind it. A mint-and-burn cycle can therefore never exceed the ceiling, because capacity is exhausted by historical minting, not by current supply.
 
-**`MAX_SUPPLY` remains the absolute, immutable ceiling.** A mint-and-burn cycle can never cause totalSupply to exceed MAX_SUPPLY: every mint verifies `totalSupply <= MAX_SUPPLY`. Burning cannot be exploited to exceed the ceiling, because the ceiling bounds the instantaneous supply, not a lifetime total.
+**`MAX_SUPPLY` remains the absolute, immutable ceiling.** Every mint verifies `CumulativeMinted <= MAX_SUPPLY`.
 
 Consequences that must be respected in all protocol communications:
 
-* A burn **may** be described as "restoring minting capacity", but never as "new tokens in circulation".
+* A burn **must never be described as "new available supply"** nor as "restoring minting capacity".
 * Any future policy on the ceiling requires express governance authorization and cannot be presented as an automatic consequence of a burn.
 
 ## 2.3 Allocation limits
@@ -52,18 +53,17 @@ Consequences that must be respected in all protocol communications:
 | **Program** | **Maximum limit** | **%** | **Nature** |
 | Presale | up to 200,000,000 | 20 % | Foundational allocation (Section 5) |
 | Merits and Ecosystem | up to 100,000,000 | 10 % | Single contribution bucket |
-| Staking Rewards | dynamic, capped by MAX_SUPPLY | — | On-demand accrual (Section 6) |
+| Staking Rewards | up to 500,000,000 | 50 % | Immutable reserve (Section 6) |
 | Strategic Issuances | up to 200,000,000 | 20 % | Requires express DAO approval |
+| Total | 1,000,000,000 | 100 % |  |
 
 This table expresses **maximum limits**, not fixed amounts to be minted. Actual issuance derives from real activity:
 
 * **Presale and Merits** are linked to what is actually raised and claimed. Presale allocations may be resolved, at the participant's choice, into ZREC instead of ZDAO (Section 5.4); Merits allocations convert directly into ZREC (Section 5.5). The corresponding ZDAO are never minted.
-* **Staking Rewards** have no fixed reserve: ZDAO is minted on demand, only against legitimate accrual (Section 6.2), bounded by `MAX_SUPPLY`.
+* **Staking Rewards** are backed by an **immutable reserve of 500,000,000 ZDAO**: only the staking contract can mint against it, and only when a reward has been legitimately accrued. The reserve is a hard upper bound, not an obligation (Section 6.3).
 * **Strategic Issuances** are an upper bound requiring express DAO approval.
 
-No fixed reserve of ZDAO is pre-allocated to staking. The `MAX_SUPPLY` ceiling is the single hard limit; everything else is dynamic.
-
-**Headroom.** The explicit limits (Presale 200M + Merits/Ecosystem 100M + Strategic 200M = 500M) account for at most 50% of `MAX_SUPPLY`. The remaining headroom is not assigned to any predefined program: it is only consumable by staking accrual (on demand, Section 6.2) and future governance-approved issuances. It is a dynamic buffer, not a fixed allocation.
+The 500,000,000 staking reserve is an **invariant**: it may not be allocated to treasury, team, liquidity, Merits, campaigns, strategic issuances, or any purpose other than the Official Staking System. ZDAO not needed for rewards are not minted.
 
 **Merits and Ecosystem is a single bucket** (abbreviated "Merits" throughout the document). It comprises the founding team, contributors, ambassadors, and user onboarding campaigns. **There are no separate quotas by category.**
 
@@ -100,4 +100,4 @@ flowchart LR
 
 The mechanism avoids hundreds of small-value burn operations, reduces operational cost, and maintains on-chain traceability. Neither the DAO nor the Committee intervenes at execution time: **the burn is triggered automatically by the fee-consolidation routine (a keeper or any user's transaction) once the segregated accumulation reaches the threshold**, and it emits a verifiable on-chain event. The segregated accumulation is held in a dedicated contract balance separate from the circulating supply until execution.
 
-In accordance with Section 2.2, ZDAO burned by this mechanism **reduces `totalSupply` and restores minting capacity**.
+In accordance with Section 2.2, ZDAO burned by this mechanism **reduce `totalSupply` but do not regenerate issuance capacity**.

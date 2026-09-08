@@ -13,7 +13,7 @@ All contracts must undergo independent audit before production, expressly verify
 | **Vector** | **Measure** | **Section** |
 | Repeated Claim after transferring ZDAO | The choice resides in the off-chain allocation, with single consumption | 5.3 |
 | Duplication of the allocation using several wallets | Terminal state per allocation | 5.3 |
-| Regeneration of issuance capacity through burning | `totalSupply` decreases; MAX_SUPPLY remains the ceiling | 2.2 |
+| Regeneration of issuance capacity through burning | `CumulativeMinted` does not decrease | 2.2 |
 | Evasion of the Merits schedule | The lock lives in the position's withdrawal rules | 5.5 and 6.4 |
 | Double minting by retrying a batch | Batch identifier in the uniqueness registry | 4.6 |
 | Reuse of already-processed production | Irreversible FINALIZED state | 4.6 |
@@ -23,7 +23,7 @@ All contracts must undergo independent audit before production, expressly verify
 | Nonexistent or oversized installation | Triple verification of nominal power | 4.5 |
 | Discretionary authorization of minting | Merkle tree published before the Claim | 5.6 |
 | Cumulative deviation from rounding | Mandatory carryover of residues | 4.6 |
-| Accelerated emission / supply dilution | MAX_EMISSION_RATE and anti-dilutive usage component as ceiling | 6.2 and 6.3 |
+| Accelerated depletion of the staking reserve | Decreasing maximum curve and 500M reserve as ceiling | 6.3 |
 
 ## 10.3 Treasury and operational security
 

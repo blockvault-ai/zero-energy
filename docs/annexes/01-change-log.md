@@ -2,6 +2,20 @@
 
 # ANNEX B — CHANGE LOG
 
+## Changes in version 3.4 (relative to 3.3)
+
+**Supply and issuance caps**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The supply metric reverts to `CumulativeMinted` (a growing counter). Burning **does not** regenerate issuance capacity | 2.1 and 2.2 |
+| 2 | A fixed **500M staking reserve** is reintroduced as an invariant; only the staking contract can mint against it | 2.3 and 6.3 |
+| 3 | The **decreasing maximum curve (halving)** is reintroduced as an annual ceiling: 250M / 125M / 62.5M / 31.25M, halving each year (a ceiling, not an obligation) | 6.3 |
+| 4 | Every minting is recorded in `CumulativeMinted` to compute how much has been minted at any time | 2.1 and Annex A.1 |
+
+---
+
 ## Changes in version 3.3 (relative to 3.2)
 
 **Consistency and corrections**

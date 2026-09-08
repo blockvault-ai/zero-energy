@@ -47,7 +47,7 @@ $$ r_{usage} = r_{usage,max} \cdot \min\!\left(1,\; \frac{ZREC_{staked}}{totalSu
 | $totalSupply_{ZDAO}$ | circulating ZDAO supply (minted minus burned) |
 | $totalSupplyFactor$ | governance parameter (10%–100%): percentage of `totalSupply` used as the denominator. Larger factor ⇒ smaller rate |
 
-The denominator uses the **circulating ZDAO supply**, not a fixed reference magnitude: because ZDAO is mintable/burnable, the reference moves with the actual economy. No fixed reserve or schedule is involved.
+The denominator uses the **circulating ZDAO supply**, not a fixed reference magnitude: because ZDAO is mintable/burnable, the reference moves with the actual economy. The overall issuance is nonetheless bounded by the 500M reserve and the decreasing curve of Section 6.3.
 
 ### Accrual
 
@@ -59,16 +59,29 @@ where $T$ is the total elapsed time of the position. The sigmoid contribution `a
 
 The combined rate is capped: $r_{personal} + r_{usage} \le MAX\_EMISSION\_RATE$.
 
-**Only the ZDAO actually accrued are minted.** There is no fixed reserve and no surplus allocation to a liquidity address: ZDAO not needed for rewards are simply never minted. This keeps emission strictly proportional to usage.
+**Only the ZDAO actually accrued are minted**, within the reserve and year ceilings of Section 6.3. There is no surplus allocation to a liquidity address: ZDAO not needed for rewards are simply never minted. This keeps emission strictly proportional to usage.
 
-## 6.3 Issuance: on-demand, bounded by MAX_SUPPLY
+## 6.3 Issuance limits
 
-There is **no fixed reserve and no decreasing schedule**. ZDAO is minted **on demand**, only when a reward is legitimately accrued, and is bounded by a single hard limit:
+Two limits operate cumulatively on the result of the previous formulas, alongside the `MAX_SUPPLY` ceiling.
 
-**1. Absolute ceiling — invariant.** `totalSupply(ZDAO) ≤ 1,000,000,000`. Verified on every mint (Section 2.1).
+**1. Absolute staking reserve — invariant.** 500,000,000 ZDAO. It cannot be allocated to treasury, team, liquidity, Merits, campaigns, strategic issuances, or any purpose other than the Official Staking System. Only the staking contract can mint against it, and only when a reward has been legitimately accrued.
 
-**2. Rate ceilings.** The emission rate itself is bounded by `MAX_EMISSION_RATE` (personal + usage components), a governance parameter, not a monetary amount.
+**2. Decreasing maximum curve — halving.** Issuance ceiling per year, as an upper-bound reference:
 
-Because ZDAO is mintable/burnable, the circulating supply contracts when ZDAO is burned (Section 2.6), restoring capacity. Emission therefore tracks real usage — staking participation and circulating supply — rather than a predetermined calendar or reserve.
+|  |  |
+| --- | --- |
+| **Year** | **Maximum issuance** |
+| Year 1 | up to 250,000,000 ZDAO |
+| Year 2 | up to 125,000,000 ZDAO |
+| Year 3 | up to 62,500,000 ZDAO |
+| Year 4 | up to 31,250,000 ZDAO |
+| Subsequent | halving each year |
 
-**Why a rate ceiling is necessary.** ZREC grows without limit as certified production increases. A percentage rate applied over a growing staked base produces growing issuance; the `MAX_EMISSION_RATE` cap, combined with the anti-dilutive usage component (which falls as ZDAO supply grows), bounds that risk without resorting to fixed monetary ceilings.
+The first year's ceiling is 250,000,000 ZDAO, halving each subsequent year. These values are **maximum ceilings, not issuance obligations**: if accrued rewards are below the available ceiling for a year, the difference is **not minted automatically**. The document must not describe these amounts as figures that will necessarily enter circulation.
+
+**Why the ceiling is necessary.** ZREC grows without limit as certified production increases. A percentage rate applied over a growing staked base produces growing issuance; without a ceiling, the greater the protocol's energy success, the sooner the rewards reserve would be exhausted. The decreasing curve bounds that risk.
+
+> **Mechanism.** The staking contract tracks the ZDAO minted per year against the curve. If aggregate accrual in a year would exceed that year's ceiling, accrual is reduced pro-rata among active positions so that the year's total never exceeds the ceiling. The unused portion of a year's ceiling is not carried over.
+
+Only the ZDAO actually accrued (and within both ceilings) are minted; there is no LP surplus. Emission therefore tracks real usage — staking participation and circulating supply — bounded by the reserve, the halving curve, and `MAX_SUPPLY`.

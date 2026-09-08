@@ -8,32 +8,42 @@ Reference implementation of the two mechanisms with the greatest economic impact
 
 ```solidity
 uint256 constant MAX_SUPPLY = 1_000_000_000e8; // ZDAO uses 8 decimals
+uint256 constant STAKING_RESERVE = 500_000_000e8;
 
-uint256 public totalSupply; // ERC-20: minted minus burned. Circulating metric.
+uint256 public cumulativeMinted; // only grows: burning does NOT reduce it
+uint256 public stakingMinted; // minted by the staking contract
 
 /// @notice Remaining minting capacity under the absolute ceiling.
 function remainingMintCapacity() public view returns (uint256) {
-    return MAX_SUPPLY - totalSupply;
+    return MAX_SUPPLY - cumulativeMinted;
 }
 
-/// @dev Invariant I-1. Applied on EVERY mint.
+/// @notice Staking reserve pending to be minted.
+function pendingStakingReserve() public view returns (uint256) {
+    return STAKING_RESERVE - stakingMinted;
+}
+
+/// @dev Invariants I-1 and I-3. Applied on EVERY mint.
 function _mint(address to, uint256 amount) internal override {
-    require(totalSupply + amount <= MAX_SUPPLY, "max supply exceeded");
+    cumulativeMinted += amount; // never decreases
+    require(cumulativeMinted <= MAX_SUPPLY, "max supply exceeded");
     super._mint(to, amount);
 }
 
-/// @dev Burning destroys tokens and restores minting capacity.
+/// @dev Burning destroys tokens but does NOT restore minting capacity.
 function burn(uint256 amount) external {
-    _burn(msg.sender, amount); // totalSupply drops; capacity is restored
+    _burn(msg.sender, amount); // totalSupply drops, cumulativeMinted does NOT
 }
 
-/// @dev Only the staking contract mints rewards, on demand.
+/// @dev Only the staking contract mints against the reserve.
 function mintStakingReward(address to, uint256 amount) external onlyStaking {
+    stakingMinted += amount;
+    require(stakingMinted <= STAKING_RESERVE, "staking reserve exceeded");
     _mint(to, amount);
 }
 ```
 
-Note that capacity is measured against `totalSupply` (minted minus burned): burning ZDAO directly restores minting capacity, while `MAX_SUPPLY` remains the immutable ceiling.
+Note that `burn()` does not touch `cumulativeMinted`: that single omission is what keeps the ceiling a real limit. `mintStakingReward` additionally enforces the 500M staking reserve.
 
 **A.2 Staking reward accrual** (Section 6.2)
 

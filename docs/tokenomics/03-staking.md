@@ -2,7 +2,7 @@
 
 # 6. OFFICIAL STAKING SYSTEM
 
-**ZREC** is deposited and **ZDAO** is received. It is the only mechanism through which ZDAO rewards are minted, on demand and bounded by `MAX_SUPPLY`.
+**ZREC** is deposited and **ZDAO** is received. It is the only mechanism through which the 500,000,000 ZDAO of the rewards reserve can be minted, bounded by the decreasing curve (Section 6.3).
 
 ## 6.1 Technical base
 
@@ -33,7 +33,7 @@ Merits ZREC **generate rewards from the start of their position, including the s
 
 The ZDAO generated as rewards:
 
-* come exclusively from on-demand reward minting, not from the Merits Program;
+* come exclusively from the staking reserve, not from the Merits Program;
 * **do not inherit the lock** of the ZREC that generated them;
 * are free once distributed.
 

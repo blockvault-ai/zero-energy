@@ -25,12 +25,12 @@ The ZERO Energy staking diverges from EasyStaking in the following ways (documen
 | Deposited token == reward token (STAKE) | Deposited token is **ZREC**, reward token is **ZDAO** (different assets, decimals 3 vs 8) |
 | `general` component uses `totalSupply` of STAKE | `usage` component uses **circulating `totalSupply` of ZDAO** as denominator, with ZREC staked as numerator |
 | Mints the max rate and sends surplus to LP | **No LP**: only the actually accrued reward is minted |
-| Fixed token supply assumptions | ZDAO is **mintable/burnable**; capacity is measured against circulating `totalSupply` |
+| Fixed token supply assumptions | ZDAO is **mintable/burnable**; capacity is measured against `CumulativeMinted` (burning does not regenerate capacity); a **500M staking reserve** and a **decreasing halving curve** bound issuance |
 | `MAX_EMISSION_RATE` = 15% fixed | `MAX_EMISSION_RATE` is a governance parameter (initial 10%, range 0–15%) |
 
 ## Key implementation concerns
 
 1. **Decimal normalization.** ZREC uses 3 decimals, ZDAO uses 8. All reward math must normalize both scales with safe integer arithmetic and explicit rounding (see Section 6.2 and Annex A.2).
 2. **Closed-form accrual.** The personal sigmoid's antiderivative `a·sqrt((t−b)²+c)` allows exact accrual without numerical integration, avoiding the double-time-dependence bug.
-3. **Anti-dilution.** The usage component falls as ZDAO supply grows, bounding emission without a fixed reserve or schedule.
+3. **Supply bounds.** Even though the usage component is anti-dilutive, ZDAO issuance is additionally bounded by a 500M staking reserve and a decreasing halving curve (Section 6.3), with a `CumulativeMinted` counter that burning does not rewind.
 4. **Audit.** The EasyStaking adaptation does **not** inherit the original audit coverage; it requires independent testing and audit before deployment (Section 6.1).
