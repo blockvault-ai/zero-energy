@@ -1,6 +1,6 @@
 <!-- Origen: ZERO-ENERGY-Especificacion-Tecnica-v2.0.md -->
 
-# 5. FOUNDATIONAL PHASE: PRESALE, TGE AND CLAIM
+# 5. GENESIS PHASE: PRESALE, TGE AND CLAIM
 
 ## 5.1 Presale
 
@@ -36,13 +36,13 @@ The resources obtained are allocated to the development of the blockchain and en
 * Merits participants convert their allocations into ZREC with a vesting schedule (Section 5.5).
 * The staking positions corresponding to Merits ZREC are created automatically.
 
-Once the window closes, the possibility of claiming a foundational allocation closes as well, and unclaimed allocations are treated according to the pending decision below.
+Once the window closes, the possibility of claiming a Genesis allocation closes as well, and unclaimed allocations are treated according to the pending decision below.
 
 ⬜ **Pending protocol decision:** the definitive treatment of allocations that did not perform a Claim within the window. It is not established in this document because no express decision yet exists.
 
 ## 5.3 Claim choices
 
-**There is no special "right" attached to a foundational allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption. Only Presale allocations involve a choice; Merits allocations resolve directly into ZREC (Section 5.5).
+**There is no special "right" attached to a Genesis allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption. Only Presale allocations involve a choice; Merits allocations resolve directly into ZREC (Section 5.5).
 
 ```mermaid
 flowchart TD

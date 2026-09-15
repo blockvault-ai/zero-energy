@@ -5,61 +5,46 @@
 
 ## 6.2 Dynamic rewards model
 
-The system **abandons any interpretation of a guaranteed fixed ROI**. The reward rate results from two components that are added together, each with its own ceiling.
+The system **abandons any interpretation of a guaranteed fixed ROI**. The reward accrues **linearly in time**, with an annual rate that **halves each year**: a position held for a full year earns **100 % of its principal**; a second full year earns **50 %** of the principal; a third **25 %**; and so on.
 
 ### Temporal component (position age)
 
-Sigmoid curve over the time the position has been deposited:
+The reward accrues **linearly** within each staking year. The annual reward rate, by year of permanence, is:
 
-$$ r_{personal} = \frac{a \cdot t}{\sqrt{t^2 + c}} $$
-
-| Variable | Definition | Reference value |
-| --- | --- | --- |
-| $t$ | time in staking | — |
-| $a$ | component ceiling (personal APR cap) | **5 %** |
-| $b$ | offset | **0** (removed) |
-| $c$ | slope parameter | **1,323 days²** |
-
-With $b = 0$, the curve starts at $t=0$ and grows monotonically toward $a$, rewarding permanence without locking anyone in. The reference parameters are:
+$$ r_{n} = \frac{100\,\%}{2^{\,n-1}} $$
 
 |  |  |
 | --- | --- |
-| **Time in staking** | **Proportion of ceiling reached** |
-| 1 day | ~2.7 % |
-| 7 days | ~18.9 % |
-| 21 days | ~50.0 % |
-| 30 days | ~63.6 % |
-| 90 days | ~92.7 % |
-| 1 year | ~99.5 % |
+| **Staking year** | **Annual rate** |
+| Year 1 | 100 % |
+| Year 2 | 50 % |
+| Year 3 | 25 % |
+| Year 4 | 12.5 % |
+| Subsequent | halving each year |
 
-These values follow `t / sqrt(t² + c)` with `c = 1,323 days²`, and are therefore fully reproducible.
-
-### Usage component (supply-based)
-
-The second component ties the rate to real usage: it rises with the amount of ZREC staked relative to the circulating ZDAO supply. The higher the staking participation and the lower the ZDAO in circulation, the higher the rate, up to its ceiling. This is **anti-dilutive**: as more ZDAO enters circulation, the emission rate falls.
-
-$$ r_{usage} = r_{usage,max} \cdot \min\!\left(1,\; \frac{ZREC_{staked}}{totalSupply_{ZDAO} \cdot totalSupplyFactor}\right) $$
-
-| Variable | Definition |
-| --- | --- |
-| $r_{usage,max}$ | usage component ceiling (≤ half of MAX_EMISSION_RATE) |
-| $ZREC_{staked}$ | total ZREC deposited in staking |
-| $totalSupply_{ZDAO}$ | circulating ZDAO supply (minted minus burned) |
-| $totalSupplyFactor$ | governance parameter (10%–100%): percentage of `totalSupply` used as the denominator. Larger factor ⇒ smaller rate |
-
-The denominator uses the **circulating ZDAO supply**, not a fixed reference magnitude: because ZDAO is mintable/burnable, the reference moves with the actual economy. The overall issuance is nonetheless bounded by the 500M reserve and the decreasing curve of Section 6.3.
+A position earns its current year's rate **proportionally to the time actually staked within that year**. There is no sigmoid, no back-loading, and no preferential weighting of early or late permanence: the rate is flat within each year.
 
 ### Accrual
 
-The reward is the **integral of the instantaneous rate over the deposit period**, not the final rate applied to the whole period. Because the personal sigmoid has a closed-form antiderivative, the accrual is computed exactly without numerical integration:
+The total reward is the sum, over each year of permanence, of the year's rate applied to the time staked in that year:
 
-$$ reward = amount \cdot \left( a\cdot\left[\sqrt{T^2 + c} - \sqrt{c}\right] + r_{usage}\cdot T \right) / \left(1\ year\right) $$
+$$ reward = amount \cdot \sum_{n \ge 1} r_{n} \cdot \frac{\;t_{n}\;}{Y} $$
 
-where $T$ is the total elapsed time of the position. The sigmoid contribution `a·[√(T²+c) − √c]` is the exact integral `∫ r_personal(t) dt` from `0` to `T` (with `b = 0`, so the antiderivative `a·√(t²+c)` evaluates to `a·√c` at `t=0`). This avoids the double counting that would result from multiplying the final instantaneous rate by the whole elapsed period.
+where $Y = 365$ days and $t_{n}$ is the portion of year $n$ that the position was staked (in days, capped at $Y$). Concretely:
 
-The combined rate is capped: $r_{personal} + r_{usage} \le MAX\_EMISSION\_RATE$.
+- $T = 0$ → $reward = 0$.
+- $T = 365$ days → $reward = amount$ (**100 % of principal**).
+- $T = 2$ years → $reward = 1.5 \cdot amount$ (**150 %**, i.e. 100 % + 50 %).
+- $T = 3$ years → $reward = 1.75 \cdot amount$ (**175 %**).
+- A half-year position → $reward = 0.5 \cdot amount$ (**50 %**).
 
-**Only the ZDAO actually accrued are minted**, within the reserve and year ceilings of Section 6.3. There is no surplus allocation to a liquidity address: ZDAO not needed for rewards are simply never minted. This keeps emission strictly proportional to usage.
+The accrual is therefore **piecewise linear** in time: a flat annual rate, halved at each yearly boundary.
+
+> **Why this form.** Linearity makes the reward transparent and predictable at any point in time, without a normalization constant or a slope parameter to tune. The halving schedule (`100 % → 50 % → 25 % …`) follows the **same halving pattern** as the annual issuance ceiling of Section 6.3, so the reward rate and the issuance limits decline together.
+
+**No auto-compounding.** There is no separate growth factor and no compounding: the linear accrual alone carries the entire reward.
+
+**Only the ZDAO actually accrued are minted**, within the reserve and year ceilings of Section 6.3. There is no surplus allocation to a liquidity address: ZDAO not needed for rewards are simply never minted.
 
 ## 6.3 Issuance limits
 

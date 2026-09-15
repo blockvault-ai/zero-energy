@@ -2,6 +2,60 @@
 
 # ANNEX B — CHANGE LOG
 
+## Changes in version 3.8 (relative to 3.7)
+
+**Linear reward with per-year halving**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The reward model is changed from a back-loaded temporal sigmoid to **linear accrual in time**: a flat annual rate that halves each year (100 % year 1, 50 % year 2, 25 % year 3, …), applied proportionally to the time staked within each year | 6.2 |
+| 2 | The sigmoid slope parameter `c` is **removed**; the annual reward rate is no longer configurable and follows the immutable halving schedule | 6.2 and 11.2 |
+| 3 | Annex A.2 accrual rewritten to the piecewise-linear sum `reward = amount · Σ_n r_n · t_n / YEAR` | Annex A.2 |
+
+---
+
+## Changes in version 3.7 (relative to 3.6)
+
+**100 %/year back-loaded reward**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The reward is a single **temporal sigmoid normalized to deliver exactly 100 % of the principal over one year** (`reward = amount · (√(T²+c) − √c) / (√(Y²+c) − √c)`) | 6.2 |
+| 2 | The `mint-growth factor` (`f_growth`) is **removed**; the back-loading is carried solely by the sigmoid's `c` parameter | 6.2 |
+| 3 | `MAX_EMISSION_RATE`, the personal ceiling `a`, and the growth parameters `K`/`n` are **removed**; the only bounds are the 500M reserve, the annual halving, and `MAX_SUPPLY` | 11.2 |
+| 4 | `totalSupplyFactor` is also removed | 11.2 |
+
+---
+
+## Changes in version 3.6 (relative to 3.5)
+
+**Reward model based on `stakingMinted`**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | The `usage` component (ZREC_staked / totalSupply) is **removed** and replaced by a **mint-growth factor** `f = x² / (1 + x²)` with `x = stakingMinted / K` that scales the reward up as the reserve is consumed | 6.2 |
+| 2 | The temporal sigmoid is multiplied by the growth factor: `r_effective = a·t/√(t²+c) · f_growth` | 6.2 |
+| 3 | New governance parameters: mint-growth half-growth `K` (250M) and steepness `n` (2); `totalSupplyFactor` is removed | 11.2 |
+
+---
+
+## Changes in version 3.5 (relative to 3.4)
+
+**Separation of token and staking minting counters**
+
+|  |  |  |
+| --- | --- | --- |
+|  | **Change** | **Section** |
+| 1 | `MAX_SUPPLY` lives in the ZDAO ERC-20 and bounds `totalSupply`; minting capacity is `MAX_SUPPLY − totalSupply` | 2.1 and 2.2 |
+| 2 | Burning ZDAO **restores minting capacity** under `MAX_SUPPLY`, following the standard ERC-20 mintable/burnable capability; any holder may burn their own ZDAO | 2.2 and 2.6 |
+| 3 | The staking cap is tracked by `stakingMinted`, a cumulative counter held in the staking contract (capped at 500M); burning does **not** restore it | 2.3, 6.3 and Annex A.1 |
+| 4 | The global supply counter `CumulativeMinted` is replaced by the ERC-20 `totalSupply`; `stakingMinted` is the only monotonic record | 2.1 |
+
+---
+
 ## Changes in version 3.4 (relative to 3.3)
 
 **Supply and issuance caps**

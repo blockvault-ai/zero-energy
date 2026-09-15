@@ -1,35 +1,24 @@
 # Changes — Consolidated Log
 
-All changes applied to the specification, in a single table.
+Every difference between the current `docs/` tree (authoritative) and the original source `ZERO-ENERGY-Especificacion-Tecnica-v2.0.md` (historical), in a single table.
 
-| Ref | Contradiction / Fact | Change | Reference |
+| Ref | Original (`v2.0`) | Current (`docs/`) | Reference |
 | --- | --- | --- | --- |
-| 1 | "ZREC Genesis" existed as a distinct token type obtained via the "Genesis Right" | Removed. ZREC is a single fungible asset | [§3.2](../tokenomics/02-zero-rec.md#32-fungibility--a-single-token) |
-| 2 | "Genesis Right" was a special right with single-consumption mechanics | Removed. Merits conversion is a plain choice resolved on the off-chain record | [§5.3](../business-logic/02-foundational-phase.md#53-claim-choices) |
-| 3 | No launch milestone was defined | Introduced the **TGE**: fixes the reference date `t0` and opens the 6-month Claim window | [§5.2](../business-logic/02-foundational-phase.md#52-token-generation-event-tge-and-claim-window) |
-| 4 | Presale delivered ZDAO only (no ZREC option) | Presale now delivers **ZDAO or ZREC** at the participant's choice, both free of Vesting | [§5.4](../business-logic/02-foundational-phase.md#54-presale-branch-zdao-or-zrec) |
-| 5 | Merits participants chose between ZDAO (free) or ZREC (vesting) | Merits convert **directly to ZREC only** (cliff 6 months + 2 %/month, remaining in staking producing free ZDAO) | [§5.5](../business-logic/02-foundational-phase.md#55-merits-branch-zrec-with-vesting) |
-| 6 | "Genesis Offset Program" / "Genesis Offset NFT" / "Genesis Issuance" | Renamed to **Foundational Offset Program** / **Foundational Offset NFT** / **Foundational Issuance**; the Foundational Offset NFT is an instance of the Energy Certification NFT with `purpose = Foundational Offset` | [§3.6](../tokenomics/02-zero-rec.md#36-foundational-offset-program) |
-| 7 | Invariants I-4/I-5 (Genesis Right) existed | Removed. The decreasing issuance curve is an invariant | [§11.1](../blockchain/04-invariants-parameters.md#111-invariants) |
-| 8 | Supply metric was ambiguous (totalSupply vs cumulative) | `CumulativeMinted` is the growing counter that records every minting. Burning does **not** restore minting capacity | [§2.1](../tokenomics/01-zero-dao.md#21-supply-magnitudes) |
-| 9 | Contradiction: §2.6 said burning regenerates capacity vs §2.2 | §2.6 corrected: burning reduces `totalSupply` but **does not regenerate issuance capacity** | [§2.6](../tokenomics/01-zero-dao.md#26-burn-mechanism) |
-| 10 | Staking had no fixed bound | Staking is bounded by a **500M reserve** and a **decreasing halving curve** as an annual ceiling | [§6.3](../mathematics/01-rewards-model.md#63-issuance-limits) |
-| 11 | Allocation table expressed fixed amounts ("Allocation rights") | Renamed to "Allocation limits"; Presale/Merits linked to what is actually raised/claimed; Staking backed by an immutable 500M reserve | [§2.3](../tokenomics/01-zero-dao.md#23-allocation-limits) |
-| 12 | Reward model had a "global component" with an undefined reference magnitude | Replaced by a **usage component** (supply-based, anti-dilutive): `r_usage = max · ZREC_staked / (totalSupply_ZDAO · totalSupplyFactor)` | [§6.2](../mathematics/01-rewards-model.md#usage-component-supply-based) |
-| 13 | Reward accrual had a double time dependence (final rate × full period) | Reformulated as the exact integral of the instantaneous rate (closed-form antiderivative) | [§6.2 Accrual](../mathematics/01-rewards-model.md#accrual) |
-| 14 | Sigmoid offset `b` nonzero caused an over-subtraction bug in the antiderivative (`√(b²+c)` vs `√c`) | Fixed with `b = 0`; antiderivative is `a·(√(T²+c) − √c)` | [Annex A.2](../mathematics/02-technical-reference.md#annex-a--technical-reference) |
-| 15 | Sigmoid parameters `a, b, c` had no concrete values | Published: `a = 5 %`, `b = 0`, `c = 1,323 days²`; reference table updated to exact values | [§6.2 Temporal](../mathematics/01-rewards-model.md#temporal-component-position-age) |
-| 16 | ZREC "circulating supply" was ambiguous; ZDAO "locked positions" undefined | Clarified: ZDAO has no locked positions, so `totalSupply` equals circulating supply | [§2.1](../tokenomics/01-zero-dao.md#21-supply-magnitudes) |
-| 17 | ZREC minting origins omitted Presale in contracts | §8.2 and §9 now include Presale ZREC minting via Claim | [§8.2](../blockchain/01-governance.md#82-administrative-permissions) |
-| 18 | "Accelerated depletion of the staking reserve" vector was mislabeled | Renamed to reflect the current ceiling: decreasing curve and 500M reserve | [§10.2](../blockchain/03-security.md#102-vectors-considered) |
-| 19 | "Foundational Issuance compensated" vs "offset" terminology mixed | Unified to "Foundational Issuance offset" | [§8.7](../blockchain/01-governance.md#87-state-publication) |
-| 20 | ZERO DEX fee rate was undefined | Defined: initial 0.30 %, range 0.05 % – 1.00 % | [§7.3](../business-logic/03-zero-dex.md#73-fees) |
-| 21 | Burn trigger mechanism was unspecified | Specified: automatic via keeper/transaction once the segregated accumulation reaches the threshold | [§2.6](../tokenomics/01-zero-dao.md#26-burn-mechanism) |
-| 22 | "500 kWh/h" invalid unit | Corrected to "500 kW" | [§4.5](../infra/01-proof-of-energy.md#45-installation-registration-and-verification) |
-| 23 | Docs version still read "v2.0"; §11 described as "single table" | Updated to v3.3; §11 described as three tables (invariants / parameters / pending) | [§11](../blockchain/04-invariants-parameters.md#11-invariants-and-parameters) |
-| 24 | Presale raised amount presented as a fact | Marked as a theoretical maximum (full subscription assumed) | [§5.1](../business-logic/02-foundational-phase.md#51-presale) |
-| 25 | No staking implementation reference existed | Added `implementation/` folder adapting EasyStaking as the base | [implementation](../implementation/README.md) |
-| 26 | No fixed supply counter existed | Added `CumulativeMinted`: every minting records how much has been minted; capacity = `MAX_SUPPLY − CumulativeMinted` | [§2.1](../tokenomics/01-zero-dao.md#21-supply-magnitudes) |
-| 27 | No annual emission halving existed | Added the **halving curve**: 250M (year 1) → 125M → 62.5M → 31.25M, halving each year, as a **ceiling** (not an obligation) | [§6.3](../mathematics/01-rewards-model.md#63-issuance-limits) |
-| 28 | No fixed staking reserve existed | Added the **500M staking reserve** as an invariant (I-3) | [§2.3](../tokenomics/01-zero-dao.md#23-allocation-limits) |
-| 29 | Curve not classified as an invariant | The decreasing issuance curve is classified as **I-4** (absolute annual ceiling) | [§11.1](../blockchain/04-invariants-parameters.md#111-invariants) |
+| 1 | Supply metric is `CumulativeMinted` (a counter that only grows) | `MAX_SUPPLY` lives in the ERC-20 and bounds `totalSupply`; a separate cumulative `stakingMinted` counter lives in the staking contract | [§2.1](../tokenomics/01-zero-dao.md#21-supply-magnitudes) |
+| 2 | Burning never regenerates emission capacity (`CumulativeMinted` does not decrease) | Burning reduces `totalSupply` and **restores minting capacity under `MAX_SUPPLY`**, but does **not** restore the staking reserve | [§2.2](../tokenomics/01-zero-dao.md#22-burning-restores-minting-capacity-token-but-not-the-staking-cap) |
+| 3 | Allocation table expresses fixed amounts ("Asignación") | Allocation table expresses **maximum limits**; Presale/Merits are linked to what is actually raised/claimed | [§2.3](../tokenomics/01-zero-dao.md#23-allocation-limits) |
+| 4 | ZDAO "circulating supply" is `totalSupply` minus locked positions | ZDAO has **no locked positions**: `totalSupply` equals circulating supply | [§2.1](../tokenomics/01-zero-dao.md#21-supply-magnitudes) |
+| 5 | ZREC has **two** origins (Genesis, Energy) | ZREC has **three** origins (Presale, Merits, Energy) | [§3.3](../tokenomics/02-zero-rec.md#33-three-origins) |
+| 6 | A special "Genesis Right" (`Derecho Genesis`) governs the Genesis conversion | No special right: a plain **Claim choice** with terminal consumption, resolved on the off-chain record | [§5.3](../business-logic/02-genesis-phase.md#53-claim-choices) |
+| 7 | Only a single 6-month "Claim and Genesis window" | A **TGE** milestone is introduced, fixing the reference date `t0` and opening the 6-month Claim window | [§5.2](../business-logic/02-genesis-phase.md#52-token-generation-event-tge-and-claim-window) |
+| 8 | Phase/window/allocation/issuance use "foundational" (`fundacional`), with "Genesis" reserved for the Right and the Offset Program | "Genesis" used uniformly: **Genesis phase**, Genesis window, Genesis allocation, Genesis issuance, Genesis Offset | [§5](../business-logic/02-genesis-phase.md) |
+| 9 | Reward model is a temporal **sigmoid + global component** (`tasa_personal + tasa_global`) | Reward model is **linear in time with a per-year halving rate** (100 % year 1, 50 % year 2, …) | [§6.2](../mathematics/01-rewards-model.md#62-dynamic-rewards-model) |
+| 10 | ZERO DEX fee rate was undefined (only the destination split) | Fee rate defined: initial **0.30 %**, range 0.05 % – 1.00 % | [§7.3](../business-logic/03-zero-dex.md#73-fees) |
+| 11 | Burn trigger "fires when the threshold is reached" (unspecified executor) | Burn is triggered automatically by the **fee-consolidation routine (keeper or any user's transaction)** | [§2.6](../tokenomics/01-zero-dao.md#26-burn-mechanism) |
+| 12 | "500 kWh/h" invalid unit | Corrected to **500 kW** | [§4.5](../infra/01-proof-of-energy.md#45-installation-registration-and-verification) |
+| 13 | Invariants: I-1 `CumulativeMinted`, I-2 burn never regenerates, I-4 Genesis Right, I-5 window irreversibility | Invariants reformulated: I-1 `totalSupply`, I-2 burn restores (not staking), I-4 decreasing curve as annual ceiling, I-5 allocation single consumption; **I-11** linear halving reward rate added | [§11.1](../blockchain/04-invariants-parameters.md#111-invariants) |
+| 14 | "Reward curve parameters" listed as a configurable parameter | Removed: the annual reward rate is **immutable** (halving schedule), no curve parameter remains | [§11.2](../blockchain/04-invariants-parameters.md#112-configurable-parameters) |
+| 15 | Pending decision: "reference magnitude of the global staking component" | Removed: there is no global component in the linear model | [§11.3](../blockchain/04-invariants-parameters.md#113-pending-decisions) |
+| 16 | Section 11 described as "a single table" | Section 11 described as **three tables** (invariants / parameters / pending) | [§11](../blockchain/04-invariants-parameters.md#11-invariants-and-parameters) |
+| 17 | Annual-ceiling adjustment mechanism "pending implementation" | Adjustment mechanism specified: **pro-rata reduction among active positions** | [§6.3](../mathematics/01-rewards-model.md#63-issuance-limits) |
+| 18 | Version `2.0` | Version `3.x` (this `docs/` tree is authoritative) | [README](../README.md) |

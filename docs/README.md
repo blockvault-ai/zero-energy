@@ -6,7 +6,7 @@ Documentation modularized by domain. Original source: `ZERO-ENERGY-Especificacio
 
 | Domain | Description |
 | --- | --- |
-| [business-logic](business-logic/) | General architecture, foundational phase, ZERO DEX, provisions |
+| [business-logic](business-logic/) | General architecture, Genesis phase, ZERO DEX, provisions |
 | [tokenomics](tokenomics/) | ZDAO, ZREC, staking system |
 | [mathematics](mathematics/) | Rewards model and technical reference |
 | [blockchain](blockchain/) | Governance, contracts, security, invariants |
@@ -25,7 +25,7 @@ docs/
 ├── index.md                       # Preliminary note
 ├── business-logic/
 │   ├── 01-general-architecture.md
-│   ├── 02-foundational-phase.md
+│   ├── 02-genesis-phase.md
 │   ├── 03-zero-dex.md
 │   └── 04-general-provisions.md
 ├── tokenomics/
@@ -55,7 +55,7 @@ docs/
 | 2. ZERO DAO | `tokenomics/01-zero-dao.md` |
 | 3. ZERO REC | `tokenomics/02-zero-rec.md` |
 | 4. Proof of Energy | `infra/01-proof-of-energy.md` |
-| 5. Foundational phase | `business-logic/02-foundational-phase.md` |
+| 5. Genesis phase | `business-logic/02-genesis-phase.md` |
 | 6.1 Staking (base) + 6.4–6.6 | `tokenomics/03-staking.md` |
 | 6.2–6.3 Mathematical model | `mathematics/01-rewards-model.md` |
 | 7. ZERO DEX | `business-logic/03-zero-dex.md` |
