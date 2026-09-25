@@ -16,7 +16,7 @@ The document distinguishes these magnitudes that must not be confused:
 | Circulating supply | `totalSupply` (ZDAO has no locked positions; see note below) |
 | Minting capacity | `MAX_SUPPLY - totalSupply`, live in the ERC-20. **Recovered when ZDAO is burned** |
 | stakingMinted | Cumulative ZDAO minted by the staking contract. **Only grows; burning does not reduce it**. Lives in the staking contract, capped at 500M (Section 6.3) |
-| Off-chain allocations | Rights registered in Presale and Merits, not yet minted |
+| Off-chain allocations | Minting rights registered in Presale (denominated **TOKEN ZERO**) and Merits, not yet minted |
 | Burned ZDAO | Permanently destroyed; reduces `totalSupply` |
 
 **Invariants:**
@@ -62,7 +62,7 @@ Consequences that must be respected in all protocol communications:
 
 This table expresses **maximum limits**, not fixed amounts to be minted. Actual issuance derives from real activity:
 
-* **Presale and Merits** are linked to what is actually raised and claimed. Presale allocations may be resolved, at the participant's choice, into ZREC instead of ZDAO (Section 5.4); Merits allocations convert directly into ZREC (Section 5.5). The corresponding ZDAO are never minted.
+* **Presale and Merits** are linked to what is actually raised and claimed. Presale is denominated in **TOKEN ZERO** — an off-chain minting right — that is resolved at claim, at the participant's choice, into ZDAO or ZREC (Section 5.4); Merits allocations convert directly into ZREC (Section 5.5). The corresponding ZDAO are never minted.
 * **Staking Rewards** are backed by an **immutable reserve of 500,000,000 ZDAO**: only the staking contract can mint against it, and only when a reward has been legitimately accrued. The reserve is a hard upper bound, not an obligation (Section 6.3).
 * **Strategic Issuances** are an upper bound requiring express DAO approval.
 

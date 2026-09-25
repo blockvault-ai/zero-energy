@@ -21,7 +21,7 @@ The protocol recognizes exclusively the following permissions. No other permissi
 | **Permission** | **Holder** | **Scope** | **Destination** |
 | Reward minting | Staking contract | 500M reserve, bounded by the decreasing curve | Permanent |
 | Minting via Claim | Claim contract | Allocations from the published root | Extinguishes when the window closes |
-| Genesis ZREC minting | Claim contract | Presale and Merits allocations resolved to ZREC | Extinguishes when the window closes |
+| Genesis ZREC minting | Claim contract | Presale (TOKEN ZERO) and Merits allocations resolved to ZREC | Extinguishes when the window closes |
 | Energy minting of ZREC | Energy Issuance contract | Finalized batches | Permanent |
 | Oracle operation | ZERO Energy | Signature of validations | Opens to third parties (Milestone 3) |
 | Strategic minting | Governance | Strategic Issuances | Subject to the supply invariant |

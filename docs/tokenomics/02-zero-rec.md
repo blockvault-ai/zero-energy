@@ -32,13 +32,13 @@ This principle allows the Merits lock to exist without fragmenting the asset or 
 |  |  |  |  |
 | --- | --- | --- | --- |
 | **Origin** | **When** | **How** | **Energy backing** |
-| Presale ZREC | TGE + Claim window (6 months) | Presale allocations resolved to ZREC (Section 5.4) | No |
+| Presale ZREC | TGE + Claim window (6 months) | Presale TOKEN ZERO minting rights resolved to ZREC (Section 5.4) | No |
 | Merits ZREC | TGE + Claim window (6 months) | Merits allocations resolved to ZREC (Section 5.5) | No |
 | Energy ZREC | Permanent, after the window | Certified production via PoE | Yes |
 
 ### A. Presale ZREC
 
-Resolved **during the Claim**, according to Section 5.4. Presale ZREC are **free of Vesting**: no lock, no mandatory staking stay.
+Resolved **during the Claim**, according to Section 5.4. A Presale **TOKEN ZERO** minting right resolved to ZREC produces **free ZREC** (no lock, no mandatory staking stay).
 
 ### B. Merits ZREC
 

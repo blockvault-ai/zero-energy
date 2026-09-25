@@ -22,3 +22,4 @@ Every difference between the current `docs/` tree (authoritative) and the origin
 | 16 | Section 11 described as "a single table" | Section 11 described as **three tables** (invariants / parameters / pending) | [§11](../blockchain/04-invariants-parameters.md#11-invariants-and-parameters) |
 | 17 | Annual-ceiling adjustment mechanism "pending implementation" | Adjustment mechanism specified: **pro-rata reduction among active positions** | [§6.3](../mathematics/01-rewards-model.md#63-issuance-limits) |
 | 18 | Version `2.0` | Version `3.x` (this `docs/` tree is authoritative) | [README](../README.md) |
+| 19 | Presale allocations are denominated in ZDAO | Presale is denominated in **TOKEN ZERO** — an off-chain minting right resolved at Claim into ZDAO or ZREC | [§5.1](../business-logic/02-genesis-phase.md#51-presale) · [§5.4](../business-logic/02-genesis-phase.md#54-presale-branch-zdao-or-zrec) |

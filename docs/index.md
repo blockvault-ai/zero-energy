@@ -10,4 +10,4 @@ Three reading rules:
 * The **invariants** cannot be modified by any mechanism. The **parameters** allow configuration by governance within the indicated ranges. Section 11 collects all of them in dedicated tables (invariants in 11.1, parameters in 11.2, pending decisions in 11.3).
 * When a decision is not made, the document says so. A gap is not replaced by an assumption.
 
-**Nomenclature.** The assets are identified as **ZERO DAO (ZDAO)** and **ZERO REC (ZREC)**. After the first mention in each section, the tickers are used. Formulas, tables, diagrams, and contract specifications always use ZDAO and ZREC.
+**Nomenclature.** The assets are identified as **ZERO DAO (ZDAO)** and **ZERO REC (ZREC)**. After the first mention in each section, the tickers are used. Formulas, tables, diagrams, and contract specifications always use ZDAO and ZREC. The Presale denomination **TOKEN ZERO** is an off-chain minting right resolved at Claim into ZDAO or ZREC (Section 5.1); it is not a third on-chain asset.

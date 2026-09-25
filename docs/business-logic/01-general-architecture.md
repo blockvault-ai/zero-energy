@@ -45,7 +45,7 @@ flowchart TD
 | Function | Governance and incentives | Energy and utility asset |
 | Supply | Absolute maximum of 1,000,000,000 | No predefined maximum |
 | Decimals | 8 | 3 |
-| Origin | Presale, Merits, Staking, Strategic | Presale, Merits and certified production |
+| Origin | Presale (TOKEN ZERO), Merits, Staking, Strategic | Presale (TOKEN ZERO), Merits and certified production |
 | In staking | Received as a reward | Is the asset that is deposited |
 
 **Structural principle.** ZDAO maintains a strict issuance limit; ZREC expands as certified energy production grows. This separation allows the energy infrastructure to grow without compromising the scarcity of the governance asset. It is the economic foundation of the protocol and must not be altered.
@@ -69,7 +69,7 @@ flowchart TD
 flowchart TD
     A["PRESALE / MERITS<br/>(off-chain)"]
     B["CLAIM<br/>(single 6-month window)"]
-    P["PRESALE BRANCH<br/>(ZDAO allocation)"]
+    P["PRESALE BRANCH<br/>(TOKEN ZERO right)"]
     P1["free ZDAO"]
     P2["free ZREC<br/>(no vesting)"]
     M["MERITS BRANCH<br/>(ZREC conversion)"]

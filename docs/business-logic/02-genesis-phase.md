@@ -4,13 +4,13 @@
 
 ## 5.1 Presale
 
-Initial funding mechanism. Allocations are recorded **off-chain**; ZDAO are minted solely through the Official Claim System after launch. This decoupling between funding and effective issuance enables a verifiable distribution with no pre-minting.
+Initial funding mechanism. Allocations are recorded **off-chain** under the Presale denomination **TOKEN ZERO**: each TOKEN ZERO is a **minting right** (a right of issuance), not a minted token. Minting occurs solely through the Official Claim System after launch, where the right is resolved into ZDAO or ZREC. This decoupling between funding and effective issuance enables a verifiable distribution with no pre-minting.
 
-**Maximum allocation: 200,000,000 ZDAO** (20 % of MAX_SUPPLY). The tranche percentages are calculated **over those 200,000,000**, not over the global MAX_SUPPLY.
+**Maximum allocation: 200,000,000 TOKEN ZERO** (equivalent to 20 % of MAX_SUPPLY). The tranche percentages are calculated **over those 200,000,000**, not over the global MAX_SUPPLY.
 
 |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
-| **Tranche** | **% of Presale** | **Amount** | **Price** | **Minimum investment** | **Raised** |
+| **Tranche** | **% of Presale** | **TOKEN ZERO** | **Price** | **Minimum investment** | **Raised** |
 | 1 | 0 % – 5 % | 10,000,000 | 0.10 USDC | 1,000 USDC | 1,000,000 |
 | 2 | 5 % – 15 % | 20,000,000 | 0.25 USDC | 500 USDC | 5,000,000 |
 | 3 | 15 % – 40 % | 50,000,000 | 0.50 USDC | 250 USDC | 25,000,000 |
@@ -22,7 +22,7 @@ The **Raised** column and the **0.575 average price** are **theoretical maxima**
 
 **The tranches operate in parallel.** Each tranche has an independent allocation and remains available until its units are exhausted or until another closing condition established by the protocol occurs. **It is not necessary to exhaust one tranche to enable the next.** The minimum investment is the access criterion for each tranche.
 
-**Unallocated supply.** Presale ZDAO that are not allocated are not minted and are not automatically transferred to any other program.
+**Unallocated supply.** Presale TOKEN ZERO that are not allocated are not minted and are not automatically transferred to any other program.
 
 The resources obtained are allocated to the development of the blockchain and energy infrastructure, contract implementation and auditing, producer onboarding, ZERO DEX development and ecosystem growth.
 
@@ -32,7 +32,7 @@ The resources obtained are allocated to the development of the blockchain and en
 
 * The TGE fixes the reference date (`t0`) from which the Claim window and the Merits schedules are computed.
 * The Claim window lasts **six (6) months** from the TGE.
-* Presale participants choose, at claim time, between ZDAO or ZREC (both free of Vesting).
+* Presale participants exercise their **TOKEN ZERO** minting right, choosing at claim time between ZDAO or ZREC (both free of Vesting).
 * Merits participants convert their allocations into ZREC with a vesting schedule (Section 5.5).
 * The staking positions corresponding to Merits ZREC are created automatically.
 
@@ -42,12 +42,12 @@ Once the window closes, the possibility of claiming a Genesis allocation closes 
 
 ## 5.3 Claim choices
 
-**There is no special "right" attached to a Genesis allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption. Only Presale allocations involve a choice; Merits allocations resolve directly into ZREC (Section 5.5).
+**There is no special "right" attached to a Genesis allocation.** Each allocation admits, at claim time, a plain choice with terminal consumption. Only Presale TOKEN ZERO allocations involve a choice; Merits allocations resolve directly into ZREC (Section 5.5).
 
 ```mermaid
 flowchart TD
-    A[PRESALE PENDING] --> B["CLAIM ZDAO"]
-    A --> C["CLAIM ZREC"]
+    A["TOKEN ZERO<br/>(PRESALE PENDING)"] --> B["CLAIM ZDAO"]
+    A --> C["CLAIM ZREC<br/>(Genesis)"]
     M[MERITS PENDING] --> Z["CLAIM ZREC<br/>(vesting)"]
 ```
 
@@ -61,16 +61,16 @@ Because ZDAO and ZREC are ordinary fungible tokens (Sections 2.4 and 3.2), an ER
 
 ## 5.4 Presale branch: ZDAO or ZREC
 
-Presale allocations deliver either **ZDAO or ZREC**, at the participant's choice at claim time. Both options are **free of Vesting**: no lock, no mandatory staking stay.
+A **TOKEN ZERO** (the Presale minting right) resolves, at claim time, into either **ZDAO or ZREC**, at the participant's choice. Both options are **free of Vesting**: no lock, no mandatory staking stay.
 
 ```mermaid
 flowchart LR
-    A[Off-chain allocation] --> B[Claim]
+    A["TOKEN ZERO<br/>(off-chain minting right)"] --> B[Claim]
     B --> C["choose ZDAO<br/>(free)"]
     B --> D["choose ZREC<br/>(free)"]
 ```
 
-Ratio: **1 Presale allocation = 1 ZDAO or 1 ZREC**. There is no burn: the ZDAO of a ZREC choice are never minted.
+Ratio: **1 TOKEN ZERO = 1 ZDAO or 1 ZREC**. There is no burn: the ZDAO of a ZREC choice are never minted.
 
 * **ZDAO** — minted on-chain, completely free, fungible and transferable, with no lock.
 * **ZREC** — minted on-chain, completely free, with no Vesting, no lock and no minimum staking stay. The participant may hold, transfer, sell, swap, provide as liquidity, or voluntarily deposit in staking under the general withdrawal rules.
