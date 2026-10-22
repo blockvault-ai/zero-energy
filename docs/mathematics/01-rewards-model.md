@@ -1,72 +1,104 @@
-<!-- Origen: ZERO-ENERGY-Especificacion-Tecnica-v2.0.md -->
+<!-- Source: Protocol Technical Specification v1.0, approved on 30 Sep 2026 (English reference version). ZEROEnergyDAO/ZERO-Energy-Docs, 04_Protocol @ 07b48a6 -->
 
 > This document captures the mathematical core of the Official Staking System (Sections 6.2 and 6.3).
-> Position and withdrawal rules are in `tokenomics/03-staking.md`.
+> Position and withdrawal rules are in [`tokenomics/03-staking.md`](../tokenomics/03-staking.md).
 
-## 6.2 Dynamic rewards model
+## 6.2 Rewards model
 
-The system **abandons any interpretation of a guaranteed fixed ROI**. The reward accrues **linearly in time**, with an annual rate that **halves each year**: a position held for a full year earns **100 % of its principal**; a second full year earns **50 %** of the principal; a third **25 %**; and so on.
+The system **does not admit any interpretation as a guaranteed fixed return**. The reward accrues **linearly over time**, with an annual rate that **halves each year**: a position held for a full year accrues **100% of its principal**; a second full year, **50%** of the principal; a third, **25%**; and so on. The reward is expressed in **ZDAO per deposited ZREC**.
 
-### Temporal component (position age)
+### Time component (position age)
 
-The reward accrues **linearly** within each staking year. The annual reward rate, by year of permanence, is:
+The reward accrues **linearly** within each year of staking. The annual reward rate, according to the year of staking, is:
 
 $$ r_{n} = \frac{100\,\%}{2^{\,n-1}} $$
 
-|  |  |
+| | |
 | --- | --- |
 | **Staking year** | **Annual rate** |
-| Year 1 | 100 % |
-| Year 2 | 50 % |
-| Year 3 | 25 % |
-| Year 4 | 12.5 % |
-| Subsequent | halving each year |
+| Year 1 | 100% |
+| Year 2 | 50% |
+| Year 3 | 25% |
+| Year 4 | 12.5% |
+| Subsequent | halves each year |
 
-A position earns its current year's rate **proportionally to the time actually staked within that year**. There is no sigmoid, no back-loading, and no preferential weighting of early or late permanence: the rate is flat within each year.
+A position accrues the rate of its current year **in proportion to the time actually deposited within that year**. The rate is flat within each year: there is no preferential weighting of early or late holding periods.
 
 ### Accrual
 
-The total reward is the sum, over each year of permanence, of the year's rate applied to the time staked in that year:
+The total reward is the sum, for each year of staking, of that year's rate applied to the time deposited in that year:
 
 $$ reward = amount \cdot \sum_{n \ge 1} r_{n} \cdot \frac{\;t_{n}\;}{Y} $$
 
-where $Y = 365$ days and $t_{n}$ is the portion of year $n$ that the position was staked (in days, capped at $Y$). Concretely:
+where $Y = 365$ days and $t_{n}$ is the portion of year $n$ during which the position was deposited (in days, with a maximum of $Y$). Specifically:
 
 - $T = 0$ → $reward = 0$.
-- $T = 365$ days → $reward = amount$ (**100 % of principal**).
-- $T = 2$ years → $reward = 1.5 \cdot amount$ (**150 %**, i.e. 100 % + 50 %).
-- $T = 3$ years → $reward = 1.75 \cdot amount$ (**175 %**).
-- A half-year position → $reward = 0.5 \cdot amount$ (**50 %**).
+- $T = 365$ days → $reward = amount$ (**100% of the principal**).
+- $T = 2$ years → $reward = 1.5 \cdot amount$ (**150%**, i.e., 100% + 50%).
+- $T = 3$ years → $reward = 1.75 \cdot amount$ (**175%**).
+- A half-year position → $reward = 0.5 \cdot amount$ (**50%**).
 
-The accrual is therefore **piecewise linear** in time: a flat annual rate, halved at each yearly boundary.
+Accrual is therefore **piecewise linear**: a flat annual rate that halves at each year boundary.
 
-> **Why this form.** Linearity makes the reward transparent and predictable at any point in time, without a normalization constant or a slope parameter to tune. The halving schedule (`100 % → 50 % → 25 % …`) follows the **same halving pattern** as the annual issuance ceiling of Section 6.3, so the reward rate and the issuance limits decline together.
+Cumulative reward per 1 deposited ZREC, in ZDAO, before applying the ceilings of Section 6.3:
 
-**No auto-compounding.** There is no separate growth factor and no compounding: the linear accrual alone carries the entire reward.
+```mermaid
+%%{init: {"themeVariables": {"xyChart": {"plotColorPalette": "#B88A2E"}}}}%%
+xychart-beta
+    title "Cumulative reward per 1 ZREC"
+    x-axis "Years in staking" [0, 1, 2, 3, 4, 5]
+    y-axis "Cumulative ZDAO" 0 --> 2
+    line [0, 1, 1.5, 1.75, 1.875, 1.9375]
+```
 
-**Only the ZDAO actually accrued are minted**, within the reserve and year ceilings of Section 6.3. There is no surplus allocation to a liquidity address: ZDAO not needed for rewards are simply never minted.
+> **Why this form.** Linearity makes the reward transparent and predictable at any moment, with no normalization constants or slope parameters to adjust. The halving schedule (`100% → 50% → 25% …`) follows **the same pattern** as the annual issuance ceiling of Section 6.3, so that the reward rate and the issuance limits decrease together.
+
+**No automatic compounding.** There is no separate growth factor or compound interest: linear accrual alone determines the entire reward.
+
+**Only the ZDAO actually accrued are minted**, within the reserve and the annual ceilings of Section 6.3. ZDAO not needed for rewards are simply not minted.
+
+> **Scope of the figures.** The rates in this section describe the contract's calculation in ZDAO per ZREC. They are neither a return in any currency nor a guarantee: the economic value of a reward depends on the price ratio between ZDAO and ZREC, which is set by the market, and on the ceilings of Section 6.3, which may reduce the accrual of all positions.
 
 ## 6.3 Issuance limits
 
-Two limits operate cumulatively on the result of the previous formulas, alongside the `MAX_SUPPLY` ceiling.
+Two limits operate cumulatively on the result of the formulas above, together with the `MAX_SUPPLY` ceiling.
 
-**1. Absolute staking reserve — invariant.** 500,000,000 ZDAO. It cannot be allocated to treasury, team, liquidity, Merits, campaigns, strategic issuances, or any purpose other than the Official Staking System. Only the staking contract can mint against it, and only when a reward has been legitimately accrued.
+**1. Absolute staking reserve — invariant.** 500,000,000 ZDAO. It cannot be allocated to treasury, team, liquidity, Merits, campaigns, strategic issuances or any purpose other than the Official Staking System. Only the staking contract can mint against it, and only when a reward has been legitimately accrued.
 
-**2. Decreasing maximum curve — halving.** Issuance ceiling per year, as an upper-bound reference:
+**2. Decreasing maximum curve.** Issuance ceiling per year, as an upper limit:
 
-|  |  |
+| | |
 | --- | --- |
 | **Year** | **Maximum issuance** |
 | Year 1 | up to 250,000,000 ZDAO |
 | Year 2 | up to 125,000,000 ZDAO |
 | Year 3 | up to 62,500,000 ZDAO |
 | Year 4 | up to 31,250,000 ZDAO |
-| Subsequent | halving each year |
+| Subsequent | halves each year |
 
-The first year's ceiling is 250,000,000 ZDAO, halving each subsequent year. These values are **maximum ceilings, not issuance obligations**: if accrued rewards are below the available ceiling for a year, the difference is **not minted automatically**. The document must not describe these amounts as figures that will necessarily enter circulation.
+```mermaid
+%%{init: {"themeVariables": {"xyChart": {"plotColorPalette": "#B88A2E"}}}}%%
+xychart-beta
+    title "Annual ceiling (millions of ZDAO)"
+    x-axis ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5"]
+    y-axis "Millions of ZDAO" 0 --> 260
+    bar [250, 125, 62.5, 31.25, 15.625]
+```
 
-**Why the ceiling is necessary.** ZREC grows without limit as certified production increases. A percentage rate applied over a growing staked base produces growing issuance; without a ceiling, the greater the protocol's energy success, the sooner the rewards reserve would be exhausted. The decreasing curve bounds that risk.
+The first-year ceiling is 250,000,000 ZDAO and halves each subsequent year. These values are **maximum ceilings, not issuance obligations**: if the rewards accrued in a year fall below the available ceiling, the difference **is not minted automatically**. The document must not describe these amounts as figures that will necessarily enter circulation.
 
-> **Mechanism.** The staking contract tracks the ZDAO minted per year against the curve. If aggregate accrual in a year would exceed that year's ceiling, accrual is reduced pro-rata among active positions so that the year's total never exceeds the ceiling. The unused portion of a year's ceiling is not carried over.
+**Why the ceiling is necessary.** ZREC grows without limit as certified production increases. A percentage rate applied to a growing deposited base produces growing issuance; without a ceiling, the greater the protocol's energy success, the sooner the rewards reserve would be exhausted. The decreasing curve bounds that risk.
 
-Only the ZDAO actually accrued (and within both ceilings) are minted; there is no LP surplus. Emission therefore tracks real usage — staking participation and circulating supply — bounded by the reserve, the halving curve, and `MAX_SUPPLY`.
+> **Mechanism.** The staking contract accounts for the ZDAO minted in each year against the curve. If the aggregate accrual of a year were to exceed that year's ceiling, the accrual is reduced pro rata among the active positions, so that the year's total never exceeds the ceiling. The unused portion of a year's ceiling does not carry over to the next.
+
+```mermaid
+flowchart TD
+    A[Aggregate accrual for the year] --> B{Exceeds the year's ceiling?}
+    B -- no --> C[The accrued amount is minted]
+    B -- yes --> D[Pro rata reduction among active positions]
+    D --> E[Exactly the ceiling is minted]
+    C --> F[stakingMinted ≤ 500M]
+    E --> F
+```
+
+Only the ZDAO actually accrued are minted (and within both ceilings). Issuance thus follows real usage —participation in staking and circulating supply—, bounded by the reserve, the decreasing curve and `MAX_SUPPLY`.
