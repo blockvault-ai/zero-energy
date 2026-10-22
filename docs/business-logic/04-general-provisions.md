@@ -1,4 +1,4 @@
-<!-- Origen: ZERO-ENERGY-Especificacion-Tecnica-v2.0.md -->
+<!-- Source: Protocol Technical Specification v1.0, approved on 30 Sep 2026 (English reference version). ZEROEnergyDAO/ZERO-Energy-Docs, 04_Protocol @ 07b48a6 -->
 
 # 12. GENERAL PROVISIONS
 
@@ -6,9 +6,9 @@
 
 This document defines the economic, technical and functional architecture of the protocol and constitutes the reference specification for its development and evolution.
 
-During development, technical adaptations may be made provided they do not alter the invariants of Section 11.1, do not compromise the functional separation between ZDAO and ZREC, do not reduce the security guarantees, and are compatible with the decisions approved by governance.
+During development, technical adaptations may be made provided that they do not alter the invariants of Section 11.1, do not compromise the functional separation between ZDAO and ZREC, do not reduce the security guarantees and are compatible with the decisions approved by governance.
 
-**No technical adaptation may affect an invariant.** Any adaptation that modifies the described behavior requires express governance approval and the corresponding update of this specification.
+**No technical adaptation may affect an invariant.** Any adaptation that modifies the described behavior requires the express approval of governance and the corresponding extension of this specification, which will be incorporated as a dated annex.
 
 ## 12.2 Evolution
 
@@ -16,7 +16,7 @@ The incorporation of new functionalities, economic mechanisms, energy integratio
 
 ## 12.3 Transparency
 
-All protocol activity is carried out in accordance with the principles of transparency, traceability, security, decentralization, sustainability, scalability and auditability. The operations executed through the contracts must be publicly verifiable on Base.
+All protocol activity is carried out in accordance with the principles of transparency, traceability, security, decentralization, sustainability, scalability and auditability. Operations executed through the contracts must be publicly verifiable on Base.
 
 ## 12.4 Vision
 
