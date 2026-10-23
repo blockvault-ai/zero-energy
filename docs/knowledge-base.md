@@ -22,7 +22,7 @@ Single entry point to every topic in the specification. Each line points to the 
 | Topic | Link |
 | --- | --- |
 | Supply magnitudes (`MAX_SUPPLY`, `totalSupply`, `stakingMinted`) | [§2.1](tokenomics/01-zero-dao.md#21-supply-magnitudes) |
-| Burn restores capacity (not the staking cap) | [§2.2](tokenomics/01-zero-dao.md#22-burning-restores-minting-capacity-token-but-not-the-staking-cap) |
+| Burn restores capacity (not the staking cap) | [§2.2](tokenomics/01-zero-dao.md#22-burning-returns-minting-capacity-to-the-token-but-not-to-the-staking-cap) |
 | Allocation limits | [§2.3](tokenomics/01-zero-dao.md#23-allocation-limits) |
 | Fungibility | [§2.4](tokenomics/01-zero-dao.md#24-fungibility) |
 | Functions (governance, incentive) | [§2.5](tokenomics/01-zero-dao.md#25-functions) |
@@ -33,7 +33,7 @@ Single entry point to every topic in the specification. Each line points to the 
 | Topic | Link |
 | --- | --- |
 | Standard and decimals (1 ZREC = 1 MWh) | [§3.1](tokenomics/02-zero-rec.md#31-standard-and-decimals) |
-| Fungibility — a single token | [§3.2](tokenomics/02-zero-rec.md#32-fungibility--a-single-token) |
+| Fungibility — a single token | [§3.2](tokenomics/02-zero-rec.md#32-fungibility-a-single-token) |
 | Three origins (Presale / Merits / Energy) | [§3.3](tokenomics/02-zero-rec.md#33-three-origins) |
 | Presale ZREC | [§3.3 A](tokenomics/02-zero-rec.md#a-presale-zrec) |
 | Merits ZREC | [§3.3 B](tokenomics/02-zero-rec.md#b-merits-zrec) |
@@ -59,9 +59,9 @@ Single entry point to every topic in the specification. Each line points to the 
 
 | Topic | Link |
 | --- | --- |
-| Presale (TOKEN ZERO) | [§5.1](business-logic/02-genesis-phase.md#51-presale) |
+| Presale (TOKEN ZERO) | [§5.1](business-logic/02-genesis-phase.md#51-presale-token-zero) |
 | TGE and Claim window | [§5.2](business-logic/02-genesis-phase.md#52-token-generation-event-tge-and-claim-window) |
-| Claim choices | [§5.3](business-logic/02-genesis-phase.md#53-claim-choices) |
+| Claim choices | [§5.3](business-logic/02-genesis-phase.md#53-claim-options) |
 | Presale branch (TOKEN ZERO → ZDAO or ZREC) | [§5.4](business-logic/02-genesis-phase.md#54-presale-branch-zdao-or-zrec) |
 | Merits branch (ZREC with vesting) | [§5.5](business-logic/02-genesis-phase.md#55-merits-branch-zrec-with-vesting) |
 | Official Claim System (Merkle) | [§5.6](business-logic/02-genesis-phase.md#56-official-claim-system) |
@@ -72,17 +72,17 @@ Single entry point to every topic in the specification. Each line points to the 
 
 | Topic | Link |
 | --- | --- |
-| Technical base (EasyStaking reference) | [§6.1](tokenomics/03-staking.md#61-technical-base) |
+| Technical basis | [§6.1](tokenomics/03-staking.md#61-technical-basis) |
 | Position types (free vs Merits) | [§6.4](tokenomics/03-staking.md#64-position-types) |
-| Rewards for Merits positions | [§6.5](tokenomics/03-staking.md#65-rewards-for-merits-positions) |
+| Rewards for Merits positions | [§6.5](tokenomics/03-staking.md#65-rewards-of-merits-positions) |
 | Withdrawal (requested vs immediate) | [§6.6](tokenomics/03-staking.md#66-withdrawal) |
 
 ### Mathematical model — `mathematics/01-rewards-model.md`
 
 | Topic | Link |
 | --- | --- |
-| Dynamic rewards model (linear + halving) | [§6.2](mathematics/01-rewards-model.md#62-dynamic-rewards-model) |
-| Temporal component (position age) | [§6.2 Temporal](mathematics/01-rewards-model.md#temporal-component-position-age) |
+| Dynamic rewards model (linear + halving) | [§6.2](mathematics/01-rewards-model.md#62-rewards-model) |
+| Time component (position age) | [§6.2 Time](mathematics/01-rewards-model.md#time-component-position-age) |
 | Accrual | [§6.2 Accrual](mathematics/01-rewards-model.md#accrual) |
 | Issuance limits (reserve + halving) | [§6.3](mathematics/01-rewards-model.md#63-issuance-limits) |
 
@@ -102,9 +102,9 @@ Single entry point to every topic in the specification. Each line points to the 
 | Administrative permissions | [§8.2](blockchain/01-governance.md#82-administrative-permissions) |
 | Timelock | [§8.3](blockchain/01-governance.md#83-timelock) |
 | Emergency pause | [§8.4](blockchain/01-governance.md#84-emergency-pause) |
-| Upgradability | [§8.5](blockchain/01-governance.md#85-upgradability) |
+| Upgradability | [§8.5](blockchain/01-governance.md#85-contract-upgrades) |
 | Progressive decentralization (milestones) | [§8.6](blockchain/01-governance.md#86-progressive-decentralization-by-milestones) |
-| State publication | [§8.7](blockchain/01-governance.md#87-state-publication) |
+| State publication | [§8.7](blockchain/01-governance.md#87-publication-of-status) |
 
 ## 9. Contract architecture — `blockchain/02-contract-architecture.md`
 
@@ -127,7 +127,6 @@ Single entry point to every topic in the specification. Each line points to the 
 | --- | --- |
 | Invariants (I-1 … I-11) | [§11.1](blockchain/04-invariants-parameters.md#111-invariants) |
 | Configurable parameters | [§11.2](blockchain/04-invariants-parameters.md#112-configurable-parameters) |
-| Pending decisions | [§11.3](blockchain/04-invariants-parameters.md#113-pending-decisions) |
 
 ## 12. General provisions — `business-logic/04-general-provisions.md`
 
@@ -154,7 +153,7 @@ Single entry point to every topic in the specification. Each line points to the 
 | `MAX_SUPPLY` (1,000,000,000 ZDAO) | [§2.1](tokenomics/01-zero-dao.md#21-supply-magnitudes) |
 | Staking reserve (500,000,000 ZDAO) | [§2.3](tokenomics/01-zero-dao.md#23-allocation-limits) · [§6.3](mathematics/01-rewards-model.md#63-issuance-limits) |
 | Decreasing halving curve (250M → 125M → …) | [§6.3](mathematics/01-rewards-model.md#63-issuance-limits) |
-| Linear reward with per-year halving | [§6.2](mathematics/01-rewards-model.md#62-dynamic-rewards-model) |
+| Linear reward with per-year halving | [§6.2](mathematics/01-rewards-model.md#62-rewards-model) |
 | `stakingMinted` counter | [§2.1](tokenomics/01-zero-dao.md#21-supply-magnitudes) |
 | Merits schedule (6m cliff + 2%/month) | [§5.5](business-logic/02-genesis-phase.md#55-merits-branch-zrec-with-vesting) |
 | Decimals (ZDAO 8, ZREC 3) | [§3.1](tokenomics/02-zero-rec.md#31-standard-and-decimals) |

@@ -1,6 +1,6 @@
-# ZERO Energy — Technical Specification v3.3
+# ZERO Energy — Protocol Technical Specification v1.0
 
-Documentation modularized by domain. Original source: `ZERO-ENERGY-Especificacion-Tecnica-v2.0.md`. This `docs/` tree is the authoritative, up-to-date version (v3.3); the root source file remains historical.
+Documentation modularized by domain. This `docs/` tree carries the **Protocol Technical Specification v1.0**, approved on 30 September 2026, in its English reference version. The complete document as PDF (Spanish, English and Portuguese) is published in [ZEROEnergyDAO/ZERO-Energy-Docs](https://github.com/ZEROEnergyDAO/ZERO-Energy-Docs/tree/main/04_Protocol). The root file `ZERO-ENERGY-Especificacion-Tecnica-v2.0.md` remains historical.
 
 ## Domains
 
